@@ -20,10 +20,4 @@ router.get("/:id", (req, res, next) =>{
     });
 });
 
-router.use((req, res, next)=>{
-    res.status(404).json({
-        error: "Not Found"
-    });
-});
-
 module.exports = router;
