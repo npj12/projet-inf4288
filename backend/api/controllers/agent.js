@@ -46,6 +46,56 @@ exports.agents_get_all = (req, res, next)=>{
         });
 }
 
+exports.agents_get_all_agents_per_region = (req, res, next)=>{
+    const id = parseInt(req.params.id);
+    if(!Number.isInteger(id)){
+        const jsonResponse = {error: "The 'id' parameter must be an integer", request_body: req.body};
+        console.log(jsonResponse);
+        return res.status(422).json(jsonResponse);
+    }
+
+    const client = new Client(dbConfig);
+    client.connect()
+        .then(() => {
+            client.query('SELECT ag.id, ag.name, ag.surname, ag.email, ag.phone_number, ag.login, ag.is_admin, \
+                                ci.city_hall_name, ci.address as city_hall_address, ci.po_box as city_hall_po_box, ci.phone_number as city_hall_phone_number, ci.email as city_hall_email, \
+                                re.region_name \
+                            FROM agent ag INNER JOIN city_hall ci \
+                            ON ag.city_hall_id = ci.id INNER JOIN region re \
+                            ON ci.region_id = re.id WHERE re.id=$1', [id])
+                .then((result)=>{
+                    const jsonResponse = {
+                        count: result.rowCount,
+                        result: result.rows
+                    };
+                    console.log(jsonResponse);
+                    res.status(200).json(jsonResponse);
+                    client.end()
+                        .catch(error=>{ 
+                            const jsonResponse = {
+                                error: error
+                            };
+                            console.log(jsonResponse);
+                            res.status(500).json(jsonResponse);
+                        });
+                })
+                .catch(error=>{ 
+                            const jsonResponse = {
+                                error: error
+                            };
+                            console.log(jsonResponse);
+                            res.status(500).json(jsonResponse);
+                });
+        })
+        .catch(error=>{ 
+            const jsonResponse = {
+                error: error
+            };
+            console.log(jsonResponse);
+            res.status(500).json(jsonResponse);
+        });
+}
+
 exports.agents_get_agent = (req, res, next)=>{
     const id = parseInt(req.params.id);
     if(!Number.isInteger(id)){
