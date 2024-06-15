@@ -1,4 +1,4 @@
-const { emailRegex, dbConfig } = require("../../constants");
+const { emailRegex, dbConfig } = require("../constants");
 const { Client } = require("pg");
 const bcrypt = require("bcrypt");
 const jwt  = require("jsonwebtoken");
