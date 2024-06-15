@@ -10,13 +10,17 @@ const agentController = require('../controllers/agent');
  *     tags:
  *     - Agent
  *     summary: Get all agent
+ *     security:
+ *      - bearerAuth: [] 
  *     responses:
  *      200:
- *        description: Fetched Successfully             
+ *        description: Fetched Successfully   
+ *      401:
+ *          description: Invalid Token          
  *      500:
  *        description: Server Error
  */
-router.get("/", agentController.agents_get_all);
+router.get("/", checkAuth, agentController.agents_get_all);
 
 /**
  * @openapi
@@ -25,6 +29,8 @@ router.get("/", agentController.agents_get_all);
  *     tags:
  *     - Agent
  *     summary: Get all agent of a specific region
+ *     security:
+ *      - bearerAuth: [] 
  *     parameters:
  *      -   name: id
  *          in: path
@@ -33,12 +39,14 @@ router.get("/", agentController.agents_get_all);
  *     responses:
  *      200:
  *        description: Fetched Successfully
+ *      401:
+ *          description: Invalid Token
  *      422:
  *        description: Invalid region id
  *      500:
  *        description: Server Error
  */
-router.get("/region/:id", agentController.agents_get_all_agents_per_region);
+router.get("/region/:id", checkAuth, agentController.agents_get_all_agents_per_region);
 
 /*router.delete("/", (req, res, next)=>{
     res.status(200).json({
@@ -53,6 +61,8 @@ router.get("/region/:id", agentController.agents_get_all_agents_per_region);
  *     tags:
  *     - Agent
  *     summary: Get a specific agent
+ *     security:
+ *      - bearerAuth: [] 
  *     parameters:
  *      -   name: id
  *          in: path
@@ -61,6 +71,8 @@ router.get("/region/:id", agentController.agents_get_all_agents_per_region);
  *     responses:
  *      200:
  *          description: Fetched Successfully
+ *      401:
+ *          description: Invalid Token
  *      404:
  *          description: Agent Not Found
  *      422:
@@ -68,7 +80,7 @@ router.get("/region/:id", agentController.agents_get_all_agents_per_region);
  *      500:
  *          description: Server Error
  */
-router.get("/:id", agentController.agents_get_agent);
+router.get("/:id", checkAuth, agentController.agents_get_agent);
 
 /**
  * @openapi
