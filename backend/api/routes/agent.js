@@ -1,49 +1,25 @@
 const express = require("express");
 const router = express.Router();
+const checkAuth = require("../middleware/check-auth");
+const agentController = require('../controllers/agent');
 
-router.get("/", (req, res, next)=>{
-    res.status(200).json({
-        message: "Fecthing all council officer users"
-    });
-});
 
-router.delete("/", (req, res, next)=>{
+router.get("/", agentController.agents_get_all);
+
+/*router.delete("/", (req, res, next)=>{
     res.status(200).json({
         message: "all council officer users deleted"
     });
-});
+});*/
 
-router.get("/:id", (req, res, next)=>{
-    const id = req.params.id;
-    res.status(200).json({
-        message: "Fecthing a specific council officer user"
-    });
-});
+router.get("/:id", agentController.agents_get_agent);
 
-router.patch("/:id", (req, res, next)=>{
-    const id = req.params.id;
-    res.status(200).json({
-        message: "council officer user updated"
-    });
-});
+router.patch("/:id", checkAuth, agentController.agents_patch_agent);
 
-router.delete("/:id", (req, res, next)=>{
-    const id = req.params.id;
-    res.status(200).json({
-        message: "council officer user deleted"
-    });
-});
+router.delete("/:id", checkAuth, agentController.agents_delete_agent);   
 
-router.post("/signup", (req, res, next)=>{
-    res.status(200).json({
-        message: "sign up"
-    });
-});
+router.post("/signup", checkAuth, agentController.agents_signup);
 
-router.post("/login", (req, res, next)=>{
-    res.status(200).json({
-        message: "login"
-    });
-});
+router.post("/login", agentController.agents_login);
 
 module.exports = router;
