@@ -169,6 +169,8 @@ router.patch("/:id", checkAuth, agentController.agents_patch_agent);
  *        description: Agent removed successfuly
  *      401:
  *          description: Invalid Token
+ *      403:
+ *          description: Operation not permitted
  *      404:
  *        description: Agent not found
  *      422:
@@ -176,7 +178,7 @@ router.patch("/:id", checkAuth, agentController.agents_patch_agent);
  *      500:
  *          description: Server Error
  */
-router.delete("/:id", checkAuth, agentController.agents_delete_agent);   
+router.delete("/:id", checkAuth, checkAdmin, agentController.agents_delete_agent);   
 
 /**
  * @openapi
@@ -243,8 +245,6 @@ router.post("/signup", checkAuth, checkAdmin, agentController.agents_signup);
  *     tags:
  *     - Agent
  *     summary: Sign in as an Agent
- *     security:
- *      - bearerAuth: [] 
  *     requestBody:
  *      required: true
  *      content:
@@ -265,7 +265,7 @@ router.post("/signup", checkAuth, checkAdmin, agentController.agents_signup);
  *      200:
  *        description: login successfuly
  *      401:
- *          description: Invalid Token or invalid credentials
+ *          description: Invalid credentials
  *      422:
  *          description: Missing Parameters 
  *      500:
