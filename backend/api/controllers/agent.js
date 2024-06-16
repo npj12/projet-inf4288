@@ -458,7 +458,9 @@ exports.agents_login = (req, res, next)=>{
                                 const token = jwt.sign({
                                     id: agent['id'],
                                     login: agent['login'],
-                                    isAdmin: agent['is_admin']
+                                    isAdmin: agent['is_admin'],
+                                    isAgent: true,
+                                    isIndividual: false
                                 }, 
                                 process.env.JWT_KEY, 
                                 {

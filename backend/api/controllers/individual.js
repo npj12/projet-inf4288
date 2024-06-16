@@ -369,7 +369,9 @@ exports.login = (req, res, next)=>{
                             if(result){
                                 const token = jwt.sign({
                                     id: individual['id'],
-                                    login: individual['login']
+                                    login: individual['login'],
+                                    isAgent: false,
+                                    isIndividual: true
                                 }, 
                                 process.env.JWT_KEY, 
                                 {
