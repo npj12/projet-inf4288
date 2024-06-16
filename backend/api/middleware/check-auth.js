@@ -9,19 +9,7 @@ module.exports = (req, res, next) => {
             null
         );
         req.userData = decoded;
-        if(req.originalUrl.endsWith('/agent/signup')){
-            if(decoded.isAdmin){
-                next();
-            } else {
-                const jsonResponse = {
-                    error: 'Can\'t create new agent'
-                };
-                console.log(jsonResponse);
-                return res.status(401).json(jsonResponse);
-            }
-        } else {
-            next();
-        }
+        next();
     } catch(error){
         const jsonResponse = {
             error: 'Authentication failed'

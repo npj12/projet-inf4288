@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const checkAuth = require("../middleware/check-auth");
+const checkAdmin = require('../middleware/check-admin');
 const agentController = require('../controllers/agent');
 
 /**
@@ -222,6 +223,10 @@ router.delete("/:id", checkAuth, agentController.agents_delete_agent);
  *     responses:
  *      201:
  *        description: Agent successfuly created
+ *      401:
+ *          description: Invalid Token or invalid credentials
+ *      403:
+ *          description: Operation not permitted
  *      409:
  *          description: email (it's the default login) Already Exists
  *      422:
@@ -229,7 +234,7 @@ router.delete("/:id", checkAuth, agentController.agents_delete_agent);
  *      500:
  *          description: Server Error
  */
-router.post("/signup", checkAuth, agentController.agents_signup);
+router.post("/signup", checkAuth, checkAdmin, agentController.agents_signup);
 
 /**
  * @openapi
