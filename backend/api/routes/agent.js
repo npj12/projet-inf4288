@@ -238,39 +238,4 @@ router.delete("/:id", checkAuth, checkAdmin, agentController.agents_delete_agent
  */
 router.post("/signup", checkAuth, checkAdmin, agentController.agents_signup);
 
-/**
- * @openapi
- * '/user/agent/login':
- *  post:
- *     tags:
- *     - Agent
- *     summary: Sign in as an Agent
- *     requestBody:
- *      required: true
- *      content:
- *        application/json:
- *           schema:
- *            type: object
- *            required:
- *              - login
- *              - password
- *            properties:
- *              login:
- *                type: string
- *                default: johndoe 
- *              password:
- *                type: string
- *                default: johnDoe20!@
- *     responses:
- *      200:
- *        description: login successfuly
- *      401:
- *          description: Invalid credentials
- *      422:
- *          description: Missing Parameters 
- *      500:
- *          description: Server Error
- */
-router.post("/login", agentController.agents_login);
-
 module.exports = router;

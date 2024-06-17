@@ -194,7 +194,7 @@ exports.agents_patch_agent = (req, res, next)=>{
                                                 console.log(jsonResponse);
                                                 res.status(500).json(jsonResponse);
                                             } else { 
-                                                client.query('SELECT * FROM agent WHERE login=$1', [login])
+                                                client.query('SELECT * FROM agent ag, individual in WHERE ag.login=$1 OR in.login=$2', [login, login])
                                                 // we should ensure that the new login (if exists) will be unique
                                                     .then(result => {
                                                         if(result.rowCount > 0){
@@ -359,7 +359,7 @@ exports.agents_signup = (req, res, next)=>{
                                         res.status(500).json(jsonResponse) 
                                     });
                             } else {
-                                client.query("SELECT COUNT(*) FROM agent WHERE email=$1", [email])
+                                client.query("SELECT COUNT(*) FROM agent ag, individual in  WHERE ag.email=$1 OR in.email=$2", [email, email])
                                     .then((result)=>{
                                         if(result.rows[0].count > 0){
                                             const jsonResponse = {error: "The email already exists"};
@@ -433,93 +433,3 @@ exports.agents_signup = (req, res, next)=>{
 
     }
 }
-
-exports.agents_login = (req, res, next)=>{
-    const { login, password } =  req.body;
-    
-    if(login === undefined){
-        const jsonResponse = {error:"'login' is a required parameter", request_body: req.body};
-        console.log(jsonResponse);
-        return res.status(422).json(jsonResponse);
-    } else if(password === undefined){
-        const jsonResponse = {error:"'password' is a required parameter", request_body: req.body};
-        console.log(jsonResponse);
-        return res.status(422).json(jsonResponse);
-    }
-    const client = new Client(dbConfig);
-    client.connect()
-        .then(() => {
-            client.query('SELECT * FROM agent WHERE login=$1', [login])
-                .then(result => {
-                    if(result.rowCount > 0){
-                        const agent = result.rows[0];
-                        bcrypt.compare(password, agent['password'], (error, result) => {
-                            if(result){
-                                const token = jwt.sign({
-                                    id: agent['id'],
-                                    login: agent['login'],
-                                    isAdmin: agent['is_admin'],
-                                    isAgent: true,
-                                    isIndividual: false
-                                }, 
-                                process.env.JWT_KEY, 
-                                {
-                                    expiresIn: "1h"
-                                }
-                                );
-                                const jsonResponse = {
-                                    message:'connected successdully',
-                                    token: token
-                                };
-                                console.log(jsonResponse);
-                                res.status(200).json(jsonResponse);
-                                client.end().then().catch(error=>{ 
-                                    const jsonResponse = {
-                                        error: error
-                                    };
-                                    console.log(jsonResponse);
-                                    res.status(500).json(jsonResponse);
-                                });
-                            } else {
-                                const jsonResponse = {error:'Invalid credentials'};
-                                console.log(jsonResponse);
-                                res.status(401).json(jsonResponse); // incorrect password
-                                client.end().then().catch(error=>{ 
-                                    const jsonResponse = {
-                                        error: error
-                                    };
-                                    console.log(jsonResponse);
-                                    res.status(500).json(jsonResponse);
-                                });
-                            }
-                        });
-                    } else {
-                        const jsonResponse = {error: 'Invalid credentials', request_body: req.body};
-                        console.log(jsonResponse);
-                        res.status(401).json(jsonResponse); // agent not found
-                        client.end().then().catch(error=>{ 
-                            const jsonResponse = {
-                                error: error
-                            };
-                            console.log(jsonResponse);
-                            res.status(500).json(jsonResponse);
-                        });
-                    }
-
-                })
-                .catch(error=>{ 
-                    const jsonResponse = {
-                        error: error
-                    };
-                    console.log(jsonResponse);
-                    res.status(500).json(jsonResponse);
-                });
-        })
-        .catch(error=>{ 
-            const jsonResponse = {
-                error: error
-            };
-            console.log(jsonResponse);
-            res.status(500).json(jsonResponse);
-        });
-};

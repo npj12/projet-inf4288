@@ -201,39 +201,5 @@ router.delete("/:id", checkAuth, checkAdmin, individualController.delete_individ
  */
 router.post("/signup", individualController.sign_up);
 
-/**
- * @openapi
- * '/user/individual/login':
- *  post:
- *     tags:
- *     - Individual
- *     summary: Sign in as an individual
- *     requestBody:
- *      required: true
- *      content:
- *        application/json:
- *           schema:
- *            type: object
- *            required:
- *              - login
- *              - password
- *            properties:
- *              login:
- *                type: string
- *                default: johndoe 
- *              password:
- *                type: string
- *                default: johnDoe20!@
- *     responses:
- *      200:
- *        description: login successfuly
- *      401:
- *          description: Invalid credentials
- *      422:
- *          description: Missing Parameters 
- *      500:
- *          description: Server Error
- */
-router.post("/login", individualController.login);
 
 module.exports = router;
