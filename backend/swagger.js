@@ -33,7 +33,7 @@ const options = {
     ]
   },
   // looks for configuration in specified directories
-  apis: ['api/routes/*.js'],
+  apis: [`${__dirname}/routes/*.js`],
 }
 const swaggerSpec = swaggerJsdoc(options)
 function swaggerDocs(app, port=process.env.PORT | 3000) {
