@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-const swaggerDocs = require("backend/swagger.js")
+const swaggerDocs = require("./swagger.js")
 
 const authenticateRouter = require("./api/routes/authenticate");
 const digitizationRouter = require("./api/routes/digitization");
