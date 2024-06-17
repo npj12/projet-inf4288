@@ -137,7 +137,7 @@ exports.patch_individual = (req, res, next)=>{
                                                 console.log(jsonResponse);
                                                 res.status(500).json(jsonResponse);
                                             } else { 
-                                                client.query('SELECT * FROM individual in, agent ag WHERE in.login=$1 OR ag.login=$2', [login, login])
+                                                client.query('SELECT * FROM individual ind, agent ag WHERE ind.login=$1 OR ag.login=$2', [login, login])
                                                 // we should ensure that the new login (if exists) will be unique
                                                     .then(result => {
                                                         if(result.rowCount > 0){
@@ -280,7 +280,7 @@ exports.sign_up = (req, res, next)=>{
     } else {
         client.connect()
             .then(()=>{
-                client.query("SELECT COUNT(*) FROM individual in, agent ag WHERE in.login=$1 OR ag.login=$2", [login, login])
+                client.query("SELECT COUNT(*) FROM individual ind, agent AS ag WHERE ind.login=$1 OR ag.login=$2", [login, login])
                 .then((result)=>{
                     if(result.rows[0].count > 0){
                         const jsonResponse = {error: "The login already exists"};

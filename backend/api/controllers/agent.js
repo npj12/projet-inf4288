@@ -194,7 +194,7 @@ exports.agents_patch_agent = (req, res, next)=>{
                                                 console.log(jsonResponse);
                                                 res.status(500).json(jsonResponse);
                                             } else { 
-                                                client.query('SELECT * FROM agent ag, individual in WHERE ag.login=$1 OR in.login=$2', [login, login])
+                                                client.query('SELECT * FROM agent ag, individual ind WHERE ag.login=$1 OR ind.login=$2', [login, login])
                                                 // we should ensure that the new login (if exists) will be unique
                                                     .then(result => {
                                                         if(result.rowCount > 0){
@@ -359,7 +359,7 @@ exports.agents_signup = (req, res, next)=>{
                                         res.status(500).json(jsonResponse) 
                                     });
                             } else {
-                                client.query("SELECT COUNT(*) FROM agent ag, individual in  WHERE ag.email=$1 OR in.email=$2", [email, email])
+                                client.query("SELECT COUNT(*) FROM agent ag, individual ind  WHERE ag.email=$1 OR ind.email=$2", [email, email])
                                     .then((result)=>{
                                         if(result.rows[0].count > 0){
                                             const jsonResponse = {error: "The email already exists"};
