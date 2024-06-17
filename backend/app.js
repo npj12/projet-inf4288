@@ -10,6 +10,7 @@ const userRouter = require("./api/routes/user");
 
 app.disable('x-powered-by');
 app.use(morgan('dev'));
+app.use(express.static('./uploads'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

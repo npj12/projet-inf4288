@@ -27,7 +27,7 @@ const options = {
         description: "Local server"
       },
       {
-        url: "https://projet-inf4288.onrender.com:3000/",
+        url: "https://projet-inf4288.onrender.com/",
         description: "Live server"
       },
     ]
