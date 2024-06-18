@@ -37,6 +37,8 @@ exports.login = (req, res, next)=>{
                                 );
                                 const jsonResponse = {
                                     message:'connected successdully',
+                                    isAgent: false,
+                                    isIndividual: true,
                                     token: token
                                 };
                                 console.log(jsonResponse);
@@ -82,6 +84,9 @@ exports.login = (req, res, next)=>{
                                             );
                                             const jsonResponse = {
                                                 message:'connected successdully',
+                                                isAdmin: agent['is_admin'],
+                                                isAgent: true,
+                                                isIndividual: false,
                                                 token: token
                                             };
                                             console.log(jsonResponse);
