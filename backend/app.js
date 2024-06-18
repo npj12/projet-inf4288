@@ -14,9 +14,9 @@ app.use(express.static('./uploads'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use("/authenticate", authenticateRouter);
-app.use("/digitization", digitizationRouter);
-app.use("/user", userRouter);
+app.use("api/authenticate", authenticateRouter);
+app.use("api/digitization", digitizationRouter);
+app.use("api/user", userRouter);
 swaggerDocs(app);
 
 app.use((req, res, next)=>{
