@@ -15,7 +15,7 @@ router.get("/", (req, res, next)=>{
 
 /**
  * @openapi
- * '/user/login':
+ * '/api/user/login':
  *  post:
  *     tags:
  *     - User

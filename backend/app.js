@@ -9,8 +9,8 @@ const authenticateRouter = require("./api/routes/authenticate");
 const digitizationRouter = require("./api/routes/digitization");
 const userRouter = require("./api/routes/user");
 
-app.disable('x-powered-by'); 
 app.use(cors());
+app.disable('x-powered-by'); 
 app.use(morgan('dev'));
 app.use(express.static('./uploads'))
 app.use(bodyParser.urlencoded({ extended: false }));

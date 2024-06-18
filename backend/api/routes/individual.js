@@ -7,7 +7,7 @@ const individualController = require('../controllers/individual');
 
 /**
  * @openapi
- * '/user/individual':
+ * '/api/user/individual':
  *  get:
  *     tags:
  *     - Individual
@@ -34,7 +34,7 @@ router.get("/", checkAuth, checkAdmin, individualController.get_all_individuals)
 
 /**
  * @openapi
- * '/user/individual/{id}':
+ * '/api/user/individual/{id}':
  *  get:
  *     tags:
  *     - Individual
@@ -64,7 +64,7 @@ router.get("/:id", checkAuth, checkAdmin, individualController.get_individual);
 
 /**
  * @openapi
- * '/user/individual/{id}':
+ * '/api/user/individual/{id}':
  *  patch:
  *     tags:
  *      - Individual
@@ -125,7 +125,7 @@ router.patch("/:id", checkAuth, individualController.patch_individual);
 
 /**
  * @openapi
- * '/user/individual/{id}':
+ * '/api/user/individual/{id}':
  *  delete:
  *     tags:
  *     - Individual
@@ -155,7 +155,7 @@ router.delete("/:id", checkAuth, checkAdmin, individualController.delete_individ
 
 /**
  * @openapi
- * '/user/individual/signup':
+ * '/api/user/individual/signup':
  *  post:
  *     tags:
  *     - Individual
