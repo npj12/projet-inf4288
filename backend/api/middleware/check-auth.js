@@ -12,7 +12,9 @@ module.exports = (req, res, next) => {
             req.userData = decoded;
             next();
         } catch(error){
-            const jsonResponse = error;
+            const jsonResponse = {
+                error:error
+            };
             console.log(jsonResponse);
             return res.status(401).json(jsonResponse);
         }
