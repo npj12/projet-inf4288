@@ -6,7 +6,7 @@ const agentController = require('../controllers/agent');
 
 /**
  * @openapi
- * '/user/agent':
+ * '/api/user/agent':
  *  get:
  *     tags:
  *     - Agent
@@ -25,7 +25,7 @@ router.get("/", checkAuth, agentController.agents_get_all);
 
 /**
  * @openapi
- * '/user/agent/region/{id}':
+ * '/api/user/agent/region/{id}':
  *  get:
  *     tags:
  *     - Agent
@@ -57,7 +57,7 @@ router.get("/region/:id", checkAuth, agentController.agents_get_all_agents_per_r
 
 /**
  * @openapi
- * '/user/agent/{id}':
+ * '/api/user/agent/{id}':
  *  get:
  *     tags:
  *     - Agent
@@ -85,7 +85,7 @@ router.get("/:id", checkAuth, agentController.agents_get_agent);
 
 /**
  * @openapi
- * '/user/agent/{id}':
+ * '/api/user/agent/{id}':
  *  patch:
  *     tags:
  *      - Agent
@@ -152,7 +152,7 @@ router.patch("/:id", checkAuth, agentController.agents_patch_agent);
 
 /**
  * @openapi
- * '/user/agent/{id}':
+ * '/api/user/agent/{id}':
  *  delete:
  *     tags:
  *     - Agent
@@ -182,7 +182,7 @@ router.delete("/:id", checkAuth, checkAdmin, agentController.agents_delete_agent
 
 /**
  * @openapi
- * '/user/agent/signup':
+ * '/api/user/agent/signup':
  *  post:
  *     tags:
  *     - Agent
