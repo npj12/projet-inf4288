@@ -2,13 +2,15 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-const swaggerDocs = require("./swagger.js")
+const swaggerDocs = require("./swagger.js");
+const cors = require('cors');
 
 const authenticateRouter = require("./api/routes/authenticate");
 const digitizationRouter = require("./api/routes/digitization");
 const userRouter = require("./api/routes/user");
 
-app.disable('x-powered-by');
+app.disable('x-powered-by'); 
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.static('./uploads'))
 app.use(bodyParser.urlencoded({ extended: false }));
