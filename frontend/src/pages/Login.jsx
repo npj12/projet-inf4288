@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 const LoginFormContainer = styled.div`
   display: flex;
@@ -96,15 +98,15 @@ const Button = styled.button`
   padding: 0.75rem;
   border: none;
   border-radius: 5px;
-  background: #007bff;
+  background: ${({ disabled }) => (disabled ? '#ccc' : '#007bff')};
   color: #fff;
   font-size: 1rem;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background 0.3s ease;
   margin-bottom: 1rem;
 
   &:hover {
-    background: #0056b3;
+    background: ${({ disabled }) => (disabled ? '#ccc' : '#0056b3')};
   }
 `;
 
@@ -149,19 +151,44 @@ const ImageContainer = styled.div`
 `;
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
+  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login: loginAuth } = useAuth();
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Ajoutez ici votre logique de soumission de formulaire
-    console.log('Email:', email);
-    console.log('Password:', password);
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post('https://projet-inf4288.onrender.com/api/user/login', { login, password }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.data.success) {
+        // Stocker le rendu de l'API dans le navigateur
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        // Appeler la fonction de connexion du contexte Auth
+        loginAuth();
+        // Rediriger vers la page d'accueil
+        navigate('/Home.jsx');
+      } else {
+        setErrorMessage(response.data.message || 'Erreur lors de la connexion');
+      }
+    } catch (error) {
+      console.error('Erreur de connexion à l\'API:', error); 
+      setErrorMessage('Erreur lors de la connexion à l\'API');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -170,14 +197,16 @@ const LoginForm = () => {
         <FormContainer>
           <form onSubmit={handleSubmit}>
             <h2>Login</h2>
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <FormGroup>
-              <label htmlFor="email">Email</label>
+              <label htmlFor="login">Login</label>
               <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text" 
+                id="login"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
                 required
+                disabled={isSubmitting}
               />
             </FormGroup>
             <FormGroup>
@@ -189,6 +218,7 @@ const LoginForm = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={isSubmitting}
                 />
                 <FontAwesomeIcon
                   icon={showPassword ? faEyeSlash : faEye}
@@ -200,7 +230,9 @@ const LoginForm = () => {
               </div>
             </FormGroup>
             <ButtonContainer>
-              <Button type="submit">Login</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Logging in...' : 'Login'}
+              </Button>
               <SignUpButton to="/create-account">
                 Create Account
               </SignUpButton>

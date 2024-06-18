@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const SignupFormContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Utilisation de min-height pour assurer le plein écran */
+  min-height: 100vh;
   background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
   padding: 1rem;
 
@@ -20,19 +21,19 @@ const SignupFormContainer = styled.div`
 
 const Form = styled.form`
   background: #fff;
-  padding: 2rem;
+  padding: 2.5rem;
   border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   transition: all 0.3s ease-in-out;
 
   @media (max-width: 768px) {
-    padding: 1rem;
+    padding: 1.5rem;
   }
 
   &:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -45,11 +46,12 @@ const FormGroup = styled.div`
     margin-bottom: 0.5rem;
     font-weight: bold;
     color: #333;
+    font-size: 1rem;
     transition: color 0.3s ease;
   }
 
   input {
-    width: calc(100% - 40px); /* Adjusted width for the input to accommodate the icon */
+    width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -75,6 +77,10 @@ const FormGroup = styled.div`
     color: #007bff;
     user-select: none;
     transition: color 0.3s ease;
+
+    &:hover {
+      color: #0056b3;
+    }
   }
 `;
 
@@ -83,16 +89,16 @@ const Button = styled.button`
   padding: 0.75rem;
   border: none;
   border-radius: 5px;
-  background: #28a745;
+  background: ${({ disabled }) => (disabled ? '#ccc' : '#28a745')};
   color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
+  font-size: 1.1rem;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background 0.3s ease, transform 0.2s ease;
-  margin-bottom: 0.5rem; /* Réduit l'espace entre les boutons */
+  margin-bottom: 0.5rem;
 
   &:hover {
-    background: #218838;
-    transform: translateY(-2px);
+    background: ${({ disabled }) => (disabled ? '#ccc' : '#218838')};
+    transform: ${({ disabled }) => (disabled ? 'none' : 'translateY(-2px)')};
   }
 
   &:active {
@@ -101,7 +107,7 @@ const Button = styled.button`
 
   @media (max-width: 768px) {
     padding: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
   }
 `;
 
@@ -114,7 +120,7 @@ const LoginButton = styled(Link)`
   border-radius: 5px;
   background: #007bff;
   color: #fff;
-  font-size: 1rem;
+  font-size: 1.1rem;
   text-decoration: none;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
@@ -130,7 +136,19 @@ const LoginButton = styled(Link)`
 
   @media (max-width: 768px) {
     padding: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+  }
+`;
+
+const Title = styled.h2`
+  margin-bottom: 2rem;
+  color: #333;
+  font-size: 2rem;
+  text-align: center;
+  font-weight: bold;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
   }
 `;
 
@@ -138,8 +156,16 @@ const SignupForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [login, setLogin] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -149,18 +175,88 @@ const SignupForm = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Ajoutez ici votre logique de soumission de formulaire
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Confirm Password:', confirmPassword);
+
+    if (password !== confirmPassword) {
+      setErrorMessage('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    setErrorMessage('');
+    setSuccessMessage('');
+    setIsSubmitting(true);
+
+    try {
+      const response = await axios.post(
+        'https://projet-inf4288.onrender.com/api/user/individual/signup',
+        {
+          name,
+          surname,
+          phoneNumber,
+          email,
+          password,
+          login,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        setSuccessMessage('Compte créé avec succès !');
+        setTimeout(() => navigate('/login'), 1000); // Redirection après 1 seconde
+      } else if (response.status === 409) {
+        setErrorMessage('Le login existe déjà');
+      } else if (response.status === 422) {
+        setErrorMessage('Paramètres invalides ou manquants');
+      } else {
+        setErrorMessage('Erreur lors de la création du compte');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setErrorMessage('Erreur lors de la connexion à l\'API');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <SignupFormContainer>
       <Form onSubmit={handleSubmit}>
-        <h2>Create Account</h2>
+        <Title>Create Account</Title>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+        <FormGroup>
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <label htmlFor="surname">Surname</label>
+          <input
+            type="text"
+            id="surname"
+            value={surname === null ? '' : surname}
+            onChange={(e) => setSurname(e.target.value)}
+          />
+        </FormGroup>
+        <FormGroup>
+          <label htmlFor="phoneNumber">Phone Number</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            value={phoneNumber === null ? '' : phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+        </FormGroup>
         <FormGroup>
           <label htmlFor="email">Email</label>
           <input
@@ -168,6 +264,16 @@ const SignupForm = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <label htmlFor="login">Login</label>
+          <input
+            type="text"
+            id="login"
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
             required
           />
         </FormGroup>
@@ -186,7 +292,6 @@ const SignupForm = () => {
               onClick={togglePasswordVisibility}
               size="1x"
               className="password-toggle"
-              style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#007bff' }}
             />
           </div>
         </FormGroup>
@@ -205,11 +310,12 @@ const SignupForm = () => {
               onClick={toggleConfirmPasswordVisibility}
               size="1x"
               className="password-toggle"
-              style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#007bff' }}
             />
           </div>
         </FormGroup>
-        <Button type="submit">Create Account</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Create Account'}
+        </Button>
         <LoginButton to="/login">Login</LoginButton>
       </Form>
     </SignupFormContainer>
