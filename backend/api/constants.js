@@ -5,7 +5,7 @@ const dbConfig = {
   port: process.env.DB_PORT,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
-  ssl: {
+  ssl: process.env.IN_DEVELOPMENT ? null : {
     rejectUnauthorized: false
   },
   connectionString: process.env.DB_CONNECTION_STRING
