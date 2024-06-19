@@ -85,7 +85,7 @@ function Navbar() {
                         )}
                         {(userType === 'Agent' || userType === 'Admin') && (
                           <li className="nav-item">
-                            <Link className="nav-link" to="/service2">Service2</Link>
+                            <Link className="nav-link" to="/service2">Service</Link>
                           </li>
                         )}
                         <li className="nav-item">
