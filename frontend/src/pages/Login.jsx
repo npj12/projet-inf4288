@@ -198,7 +198,7 @@ const LoginForm = () => {
       }
     } catch (error) {
       console.error('Erreur de connexion à l\'API:', error);
-      setErrorMessage('Erreur lors de la connexion à l\'API');
+      setErrorMessage('Login or password incorrect');
     } finally {
       setIsLoading(false); // Stop loading indicator
     }

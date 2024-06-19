@@ -13,6 +13,7 @@ import Authentification from './components/Authentification';
 import CreationActe from './components/CreationActe';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import Admin from './admin/main';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/authentification" element={<Authentification />} />
             <Route path="/service2" element={<Service2 />} />
             <Route path="/creation-acte" element={<CreationActe />} />
+            <Route path="/admin" element={<Admin />} />  
           </Route>
         </Routes>
         <Footer />
