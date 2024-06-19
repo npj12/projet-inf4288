@@ -181,14 +181,14 @@ const LoginForm = () => {
         localStorage.setItem('token', token); // Save token to localStorage or sessionStorage
         console.log('Token stored in localStorage:', token); // Debug log
 
-        loginAuth(); // Perform login action
-
-        // Redirect based on user type
         if (isAdmin) {
+          loginAuth('Admin');
           navigate('/');
         } else if (isAgent) {
+          loginAuth('Agent');
           navigate('/');
         } else if (isIndividual) {
+          loginAuth('Individual');
           navigate('/');
         } else {
           navigate('/'); // Default redirect

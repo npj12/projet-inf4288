@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 function Footer() {
-  const { isAuthenticated, logout } = useAuth(); // Assurez-vous que logout est bien disponible ici
+  const { isAuthenticated, logout, userType } = useAuth();
 
   return (
     <div className="sub_page">
@@ -17,13 +17,13 @@ function Footer() {
                   <span>SHAJ</span>
                 </Link>
                 <p>
-                  Birth certificate digitilization and authentication to prevent fraud in Cameroon
+                  Birth certificate digitization and authentication to prevent fraud in Cameroon
                 </p>
               </div>
             </div>
             <div className="col-md-3">
               <div className="info_links">
-                <h5>Useful Link</h5>
+                <h5>Useful Links</h5>
                 <ul>
                   <li>
                     <Link to="/">Home</Link>
@@ -34,7 +34,9 @@ function Footer() {
                         <Link to="/about">About</Link>
                       </li>
                       <li>
-                        <Link to="/service">Service</Link>
+                        <Link to={userType === 'Individual' ? '/service' : '/service2'}>
+                          {userType === 'Individual' ? 'Service' : 'Service2'}
+                        </Link>
                       </li>
                     </>
                   )}
@@ -102,6 +104,7 @@ function Footer() {
       <footer className="container-fluid footer_section">
         <p>
           &copy; <span id="currentYear"></span> All Rights Reserved. Design by
+          <a href="https://html.design/">HTML Design</a>
         </p>
       </footer>
       {/* <!-- footer section --> */}

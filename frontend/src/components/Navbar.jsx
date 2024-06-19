@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, userType } = useAuth();
 
   useEffect(() => {
     const navItems = document.querySelectorAll('.nav-item');
@@ -37,7 +37,7 @@ function Navbar() {
               <div className="contact_link-container">
                 <a href="" className="contact_link1">
                   <i className="fa fa-map-marker" aria-hidden="true"></i>
-                  <span>University of yaounde 1,</span>
+                  <span>University of Yaounde 1,</span>
                 </a>
                 <a href="" className="contact_link2">
                   <i className="fa fa-phone" aria-hidden="true"></i>
@@ -78,9 +78,16 @@ function Navbar() {
                         <li className="nav-item">
                           <Link className="nav-link" to="/about">About</Link>
                         </li>
-                        <li className="nav-item">
-                          <Link className="nav-link" to="/service">Services</Link>
-                        </li>
+                        {userType === 'Individual' && (
+                          <li className="nav-item">
+                            <Link className="nav-link" to="/service">Service</Link>
+                          </li>
+                        )}
+                        {(userType === 'Agent' || userType === 'Admin') && (
+                          <li className="nav-item">
+                            <Link className="nav-link" to="/service2">Service2</Link>
+                          </li>
+                        )}
                         <li className="nav-item">
                           <Link className="nav-link" to="/contact">Contact us</Link>
                         </li>
