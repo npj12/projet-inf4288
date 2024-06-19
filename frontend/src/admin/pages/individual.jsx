@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { IndividualView } from 'src/sections/individual/view';
+import { IndividualView } from '../sections/individual/view';
 
 // ----------------------------------------------------------------------
 

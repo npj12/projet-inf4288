@@ -13,7 +13,21 @@ import Authentification from './components/Authentification';
 import CreationActe from './components/CreationActe';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
-import Admin from './admin/main';
+
+import { HelmetProvider } from 'react-helmet-async';
+import ThemeProvider from './admin/theme';
+
+import { lazy, Suspense } from 'react';
+import { Outlet, Navigate, useRoutes } from 'react-router-dom';
+
+import DashboardLayout from './admin/layouts/dashboard';
+
+export const IndexPage = lazy(() => import('./admin/pages/app'));
+/* export const BlogPage = lazy(() => import('./admin/pages/blog')); */
+export const UserPage = lazy(() => import('./admin/pages/user'));
+// export const LoginPage = lazy(() => import('./admin/pages/login'));
+export const IndividualPage = lazy(() => import('./admin/pages/individual'));
+// export const Page404 = lazy(() => import('./admin/pages/page-not-found'));
 
 function App() {
   return (
@@ -31,13 +45,30 @@ function App() {
             <Route path="/authentification" element={<Authentification />} />
             <Route path="/service2" element={<Service2 />} />
             <Route path="/creation-acte" element={<CreationActe />} />
-            <Route path="/admin" element={<Admin />} />  
           </Route>
+          <Route element={
+                          <HelmetProvider>
+                              <Suspense>
+                                <ThemeProvider>
+                                  <DashboardLayout>
+                                    <Suspense>
+                                      <Outlet /> 
+                                    </Suspense>
+                                  </DashboardLayout>
+                                </ThemeProvider>
+                              </Suspense>
+                          </HelmetProvider>
+                      }>
+            <Route path="/admin" element={<IndexPage />}/>   
+            <Route path="/admin/user" element={<UserPage />} />  
+            <Route path="/admin/individual" element={<IndividualPage />} />  
+          </Route> 
         </Routes>
         <Footer />
       </Router>
     </AuthProvider>
   );
 }
+
 
 export default App;

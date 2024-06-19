@@ -1,4 +1,4 @@
-import SvgColor from 'src/components/svg-color';
+import SvgColor from '../../components/svg-color';
 
 // ----------------------------------------------------------------------
 
@@ -9,17 +9,17 @@ const icon = (name) => (
 const navConfig = [
   {
     title: 'dashboard',
-    path: '/',
+    path: '/admin',
     icon: icon('ic_analytics'),
   },
   {
     title: 'user',
-    path: '/user',
+    path: '/admin/user',
     icon: icon('ic_user'),
   },
   {
     title: 'individual',
-    path: '/individual',
+    path: '/admin/individual',
     icon: icon('ic_cart'),
   }, 
   /* {
