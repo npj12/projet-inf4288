@@ -5,6 +5,7 @@
         "DB_PORT": 5432,
         "DB_HOST": "localhost",
         "DB_NAME": "projet-inf4288",
-        "JWT_KEY": "inf4288"
+        "JWT_KEY": "inf4288",
+        "IN_DEVELOPMENT": true
     }
 }
