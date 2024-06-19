@@ -98,21 +98,22 @@ const Button = styled.button`
   padding: 0.75rem;
   border: none;
   border-radius: 5px;
-  background: ${({ disabled }) => (disabled ? '#ccc' : '#007bff')};
+  background: #007bff;
   color: #fff;
   font-size: 1rem;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background 0.3s ease;
   margin-bottom: 1rem;
+  opacity: ${({ disabled }) => (disabled ? '0.7' : '1')};
 
   &:hover {
-    background: ${({ disabled }) => (disabled ? '#ccc' : '#0056b3')};
+    background: ${({ disabled }) => (disabled ? '#007bff' : '#0056b3')};
   }
 `;
 
 const SignUpButton = styled(Link)`
   width: 100%;
-  display: block; /* Pour que le lien remplisse toute la largeur du parent */
+  display: block;
   text-align: center;
   padding: 0.75rem;
   border: none;
@@ -120,7 +121,7 @@ const SignUpButton = styled(Link)`
   background: #28a745;
   color: #fff;
   font-size: 1rem;
-  text-decoration: none; /* Supprimer le soulignement du lien */
+  text-decoration: none;
   cursor: pointer;
   transition: background 0.3s ease;
 
@@ -140,12 +141,12 @@ const ImageContainer = styled.div`
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Pour s'assurer que l'image couvre toute la hauteur */
+    object-fit: cover;
   }
 
   @media (max-width: 768px) {
     img {
-      height: 50vh; /* Taille fixe sur les petits écrans */
+      height: 50vh;
     }
   }
 `;
@@ -155,7 +156,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // State for loading indicator
   const { login: loginAuth } = useAuth();
   const navigate = useNavigate();
 
@@ -165,7 +166,8 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setIsLoading(true); // Start loading indicator
+
     try {
       const response = await axios.post('https://projet-inf4288.onrender.com/api/user/login', { login, password }, {
         headers: {
@@ -173,21 +175,32 @@ const LoginForm = () => {
         },
       });
 
-      if (response.data.success) {
-        // Stocker le rendu de l'API dans le navigateur
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        // Appeler la fonction de connexion du contexte Auth
-        loginAuth();
-        // Rediriger vers la page d'accueil
-        navigate('/Home.jsx');
+      if (response.data.message === 'connected successdully') {
+        const { isAgent, isIndividual, isAdmin, token } = response.data; // Extract user type and token from response
+
+        localStorage.setItem('token', token); // Save token to localStorage or sessionStorage
+        console.log('Token stored in localStorage:', token); // Debug log
+
+        loginAuth(); // Perform login action
+
+        // Redirect based on user type
+        if (isAdmin) {
+          navigate('/');
+        } else if (isAgent) {
+          navigate('/');
+        } else if (isIndividual) {
+          navigate('/');
+        } else {
+          navigate('/'); // Default redirect
+        }
       } else {
         setErrorMessage(response.data.message || 'Erreur lors de la connexion');
       }
     } catch (error) {
-      console.error('Erreur de connexion à l\'API:', error); 
+      console.error('Erreur de connexion à l\'API:', error);
       setErrorMessage('Erreur lors de la connexion à l\'API');
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false); // Stop loading indicator
     }
   };
 
@@ -201,12 +214,11 @@ const LoginForm = () => {
             <FormGroup>
               <label htmlFor="login">Login</label>
               <input
-                type="text" 
+                type="text"
                 id="login"
                 value={login}
                 onChange={(e) => setLogin(e.target.value)}
                 required
-                disabled={isSubmitting}
               />
             </FormGroup>
             <FormGroup>
@@ -218,7 +230,6 @@ const LoginForm = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  disabled={isSubmitting}
                 />
                 <FontAwesomeIcon
                   icon={showPassword ? faEyeSlash : faEye}
@@ -230,8 +241,8 @@ const LoginForm = () => {
               </div>
             </FormGroup>
             <ButtonContainer>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Logging in...' : 'Login'}
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? 'Logging in...' : 'Login'}
               </Button>
               <SignUpButton to="/create-account">
                 Create Account

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
       const link = item.querySelector('a');
-      if (link.getAttribute('href') === location.pathname) {
+      if (link && link.getAttribute('href') === location.pathname) {
         item.classList.add('active');
       } else {
         item.classList.remove('active');
@@ -19,6 +21,10 @@ function Navbar() {
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -47,9 +53,9 @@ function Navbar() {
           <div className="header_bottom">
             <div className="container-fluid">
               <nav className="navbar navbar-expand-lg custom_nav-container">
-                <a className="navbar-brand" href="index.html">
+                <Link className="navbar-brand" to="/">
                   <span>SANDO</span>
-                </a>
+                </Link>
                 <button
                   className="navbar-toggler"
                   type="button"
@@ -65,20 +71,30 @@ function Navbar() {
                 <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarSupportedContent">
                   <ul className="navbar-nav">
                     <li className="nav-item">
-                      <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
+                      <Link className="nav-link" to="/">Home</Link>
                     </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="/About">About</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="/Service">Services</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="/Contact">Contact us</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="/Login">Login</a>
-                    </li>
+                    {isAuthenticated && (
+                      <>
+                        <li className="nav-item">
+                          <Link className="nav-link" to="/about">About</Link>
+                        </li>
+                        <li className="nav-item">
+                          <Link className="nav-link" to="/service">Services</Link>
+                        </li>
+                        <li className="nav-item">
+                          <Link className="nav-link" to="/contact">Contact us</Link>
+                        </li>
+                      </>
+                    )}
+                    {!isAuthenticated ? (
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/login">Login</Link>
+                      </li>
+                    ) : (
+                      <li className="nav-item">
+                        <a className="nav-link" href="#" onClick={handleLogout}>Logout</a>
+                      </li>
+                    )}
                   </ul>
                 </div>
               </nav>
