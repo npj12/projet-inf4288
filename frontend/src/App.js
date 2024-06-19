@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Contact from './pages/Contact';
 import About from './pages/About';
@@ -21,6 +21,7 @@ import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from './admin/layouts/dashboard';
+import { usePathname } from './admin/routes/hooks';
 
 export const IndexPage = lazy(() => import('./admin/pages/app'));
 /* export const BlogPage = lazy(() => import('./admin/pages/blog')); */
@@ -30,10 +31,11 @@ export const IndividualPage = lazy(() => import('./admin/pages/individual'));
 // export const Page404 = lazy(() => import('./admin/pages/page-not-found'));
 
 function App() {
+  const { pathname } = useLocation();
+  const isAdminRoute = pathname.startsWith('/admin');
   return (
     <AuthProvider>
-      <Router>
-        <Navbar />
+        {isAdminRoute ? null :< Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -64,8 +66,7 @@ function App() {
             <Route path="/admin/individual" element={<IndividualPage />} />  
           </Route> 
         </Routes>
-        <Footer />
-      </Router>
+        {isAdminRoute ? null :<Footer />}
     </AuthProvider>
   );
 }
