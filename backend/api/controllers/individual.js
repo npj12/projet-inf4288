@@ -280,9 +280,10 @@ exports.sign_up = (req, res, next)=>{
     } else {
         client.connect()
             .then(()=>{
-                client.query("SELECT COUNT(*) FROM individual ind, agent AS ag WHERE ind.login=$1 OR ag.login=$2", [login, login])
+                client.query("SELECT COUNT(*) FROM individual ind, agent AS ag WHERE ind.login=$1 OR ag.login=$1", [login])
                 .then((result)=>{
-                    if(result.rows[0].count > 0){
+                    console.log(result);
+                    if(result.rows[0 ].count > 0){
                         const jsonResponse = {error: "The login already exists"};
                         console.log(jsonResponse);
                         res.status(409).json(jsonResponse);
@@ -318,6 +319,7 @@ exports.sign_up = (req, res, next)=>{
                                         });
                                     })
                                     .catch(error => {
+                                        error.pg_message = error.message;
                                         error.message = "Unable to add new individual to the database";
                                         const jsonResponse = {error:error.message};
                                         console.log(jsonResponse);

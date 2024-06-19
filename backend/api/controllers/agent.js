@@ -397,6 +397,7 @@ exports.agents_signup = (req, res, next)=>{
                                                             });
                                                         })
                                                         .catch(error => {
+                                                            error.pg_message = error.message;
                                                             error.message = "Unable to add new agent to the database";
                                                             const jsonResponse = {error:error.message};
                                                             console.log(jsonResponse);
