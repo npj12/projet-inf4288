@@ -26,7 +26,7 @@ import { usePathname } from './admin/routes/hooks';
 export const IndexPage = lazy(() => import('./admin/pages/app'));
 /* export const BlogPage = lazy(() => import('./admin/pages/blog')); */
 export const UserPage = lazy(() => import('./admin/pages/user'));
-// export const LoginPage = lazy(() => import('./admin/pages/login'));
+export const CreatePage = lazy(() => import('./admin/pages/create_agent'));
 export const IndividualPage = lazy(() => import('./admin/pages/individual'));
 // export const Page404 = lazy(() => import('./admin/pages/page-not-found'));
 
@@ -47,8 +47,7 @@ function App() {
             <Route path="/authentification" element={<Authentification />} />
             <Route path="/service2" element={<Service2 />} />
             <Route path="/creation-acte" element={<CreationActe />} />
-            {/* <Route path="/admin" element={<IndexPage />}/>    */}
-          
+          </Route>
           <Route element={
                           <HelmetProvider>
                               <Suspense>
@@ -62,16 +61,16 @@ function App() {
                               </Suspense>
                           </HelmetProvider>
                       }>
-            <Route path="/admin" element={<IndexPage />}/>  
+            <Route path="/admin" element={<IndexPage />}/>   
             <Route path="/admin/user" element={<UserPage />} />  
-            <Route path="/admin/individual" element={<IndividualPage />} />  
+            <Route path="/admin/individual" element={<IndividualPage />} />
+            <Route path="/admin/create_agent" element={<CreatePage />} />
           </Route> 
-          </Route>
         </Routes>
         {isAdminRoute ? null :<Footer />}
     </AuthProvider>
   );
 }
 
-
 export default App;
+
