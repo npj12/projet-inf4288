@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
     const { birthDate, name, surname, motherName, fatherName, birthPlace, sex, region} = req.body;
     let { agentId } = req.body;
     const filePath = req.file ? req.file.path : null;
-    if(!req.file){
+    if(!req.file && false){
         const jsonResponse = {
             error: 'Provide the file'
         };
