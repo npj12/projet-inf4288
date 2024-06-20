@@ -47,7 +47,8 @@ function App() {
             <Route path="/authentification" element={<Authentification />} />
             <Route path="/service2" element={<Service2 />} />
             <Route path="/creation-acte" element={<CreationActe />} />
-          </Route>
+            {/* <Route path="/admin" element={<IndexPage />}/>    */}
+          
           <Route element={
                           <HelmetProvider>
                               <Suspense>
@@ -61,10 +62,11 @@ function App() {
                               </Suspense>
                           </HelmetProvider>
                       }>
-            <Route path="/admin" element={<IndexPage />}/>   
+            <Route path="/admin" element={<IndexPage />}/>  
             <Route path="/admin/user" element={<UserPage />} />  
             <Route path="/admin/individual" element={<IndividualPage />} />  
           </Route> 
+          </Route>
         </Routes>
         {isAdminRoute ? null :<Footer />}
     </AuthProvider>
