@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -50,7 +50,7 @@ const FormGroup = styled.div`
     transition: color 0.3s ease;
   }
 
-  input {
+  input, select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
@@ -157,15 +157,30 @@ const SignupForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
-  const [surname, setSurname] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [surname, setSurname] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [login, setLogin] = useState('');
+  const [mairie, setMairie] = useState('');
+  const [mairies, setMairies] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchMairies = async () => {
+      try {
+        const response = await axios.get('https://projet-inf4288.onrender.com/api/city-hall');
+        setMairies(response.data);
+      } catch (error) {
+        console.error('Error fetching mairies:', error);
+      }
+    };
+
+    fetchMairies();
+  }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -188,6 +203,7 @@ const SignupForm = () => {
     setIsSubmitting(true);
 
     try {
+      const token = localStorage.getItem('token'); // Retrieve token from localStorage
       const response = await axios.post(
         'https://projet-inf4288.onrender.com/api/user/agent/signup',
         {
@@ -197,23 +213,21 @@ const SignupForm = () => {
           email,
           password,
           login,
+          mairie,
         },
         {
           headers: {
             'Content-Type': 'application/json',
-          },
+            'Authorization': `Bearer ${token}`
+          }
         }
       );
 
-      if (response.status === 201) {
-        setSuccessMessage('Compte créé avec succès !');
+      if (response.status === 500) {
+        setSuccessMessage('Fetched Successfully');
         setTimeout(() => navigate('/login'), 1000); // Redirection après 1 seconde
-      } else if (response.status === 409) {
-        setErrorMessage('Le login existe déjà');
-      } else if (response.status === 422) {
-        setErrorMessage('Paramètres invalides ou manquants');
       } else {
-        setErrorMessage('Erreur lors de la création du compte');
+        setErrorMessage('Server error');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -222,6 +236,7 @@ const SignupForm = () => {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <SignupFormContainer>
@@ -244,8 +259,9 @@ const SignupForm = () => {
           <input
             type="text"
             id="surname"
-            value={surname === null ? '' : surname}
+            value={surname}
             onChange={(e) => setSurname(e.target.value)}
+            required
           />
         </FormGroup>
         <FormGroup>
@@ -253,8 +269,9 @@ const SignupForm = () => {
           <input
             type="tel"
             id="phoneNumber"
-            value={phoneNumber === null ? '' : phoneNumber}
+            value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
+            required
           />
         </FormGroup>
         <FormGroup>
@@ -277,6 +294,25 @@ const SignupForm = () => {
             required
           />
         </FormGroup>
+
+<FormGroup>
+  <label htmlFor="mairie">Mairie</label>
+  <select
+    id="mairie"
+    name="cityHallId"
+    value={mairie}
+    onChange={(e) => setMairie(e.target.value)}
+    required
+  >
+    <option value="">Select a council</option>
+    {mairies.map((mairie) => (
+      <option key={mairie.id} value={mairie.id}>
+        {mairie.city_hall_name}
+      </option>
+    ))}
+  </select>
+</FormGroup>
+        
         <FormGroup>
           <label htmlFor="password">Password</label>
           <div style={{ position: 'relative' }}>
@@ -322,4 +358,3 @@ const SignupForm = () => {
 };
 
 export default SignupForm;
-

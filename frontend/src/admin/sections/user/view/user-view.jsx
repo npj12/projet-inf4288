@@ -99,7 +99,7 @@ export default function UserPage() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Agent</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />} href='\admin\sections\create_agent\view\create_view'>
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />} href='/admin/create_agent'>
           New Agent
         </Button>
         
