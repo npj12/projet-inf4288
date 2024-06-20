@@ -24,4 +24,4 @@ yarn-error.log*
 
 
 # uploaded files
-backend/upload/*
+backend/uploads/*
