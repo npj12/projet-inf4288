@@ -1,9 +1,9 @@
 const fs = require('fs');
 
 let deleteFile = function(path) { 
-    fs.unlink(path, function (err) {
+    /*fs.unlink(path, function (err) {
         if (err) throw err;
-      });      
+      });      */
 }
 
 
