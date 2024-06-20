@@ -1,95 +1,63 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function CreationActe() {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
 
   const handleBack = () => {
     navigate('/Service2');
   };
 
-  const handleShowModal = () => {
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleShowModal();
+    // Logic for form submission
   };
 
   return (
     <div className="creation-acte-page">
-      <h1>Digitalize a new birth certificate</h1>
+      <h1>Digitalize and Authenticate a Birth Certificate</h1>
       <form className="birth-certificate-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Uploader un document numérique:</label>
+          <label>Surname(s):</label>
+          <input type="text" className="form-control" placeholder="Enter surname(s)" />
+        </div>
+        <div className="form-group">
+          <label>Given name(s):</label>
+          <input type="text" className="form-control" placeholder="Enter given name(s)" />
+        </div>
+        <div className="form-group">
+          <label>Birth Date:</label>
+          <input type="date" className="form-control" />
+        </div>
+        <div className="form-group">
+          <label>Born in/at:</label>
+          <input type="text" className="form-control" placeholder="Enter place of birth" />
+        </div>
+        <div className="form-group">
+          <label>Sexe:</label>
+          <select className="form-control">
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Father's Name:</label>
+          <input type="text" className="form-control" placeholder="Enter father's name" />
+        </div>
+        <div className="form-group">
+          <label>Mother's Name:</label>
+          <input type="text" className="form-control" placeholder="Enter mother's name" />
+        </div>
+        <div className="form-group">
+          <label>Download a digital file:</label>
           <input type="file" className="form-control" />
         </div>
         <div className="button-container">
-          <button type="submit" className="btn btn-primary">Validation</button>
-          <button type="button" className="btn btn-secondary" onClick={handleBack}>Retour</button>
+          <button type="submit" className="btn btn-primary">Validate</button>
+          <button type="button" className="btn btn-secondary" onClick={handleBack}>Back</button>
         </div>
       </form>
-
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Information of the Birth Certificate </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formName">
-              <Form.Label>Surame(s)</Form.Label>
-              <Form.Control type="text" placeholder="Entrez le nom" />
-            </Form.Group>
-            <Form.Group controlId="formSurname">
-              <Form.Label>Given name(s)</Form.Label>
-              <Form.Control type="text" placeholder="Entrez le prénom" />
-            </Form.Group>
-            <Form.Group controlId="formDateOfBirth">
-              <Form.Label>Birth Date</Form.Label>
-              <Form.Control type="date" />
-            </Form.Group>
-            <Form.Group controlId="formPlaceOfBirth">
-              <Form.Label>Born in/at</Form.Label>
-              <Form.Control type="text" placeholder="Entrez le lieu de naissance" />
-            </Form.Group>
-            <Form.Group controlId="formGender">
-              <Form.Label>Sexe</Form.Label>
-              <Form.Control as="select">
-                <option>Male</option>
-                <option>Female</option>
-              </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="formFatherName">
-              <Form.Label>Father Name</Form.Label>
-              <Form.Control type="text" placeholder="Entrez le nom du père" />
-            </Form.Group>
-            <Form.Group controlId="formMotherName">
-              <Form.Label>Mother name</Form.Label>
-              <Form.Control type="text" placeholder="Entrez le nom de la mère" />
-            </Form.Group>
-            <Form.Group controlId="formIdNumber">
-              <Form.Label>Identification number</Form.Label>
-              <Form.Control type="text" placeholder="Entrez le numéro d'identification" />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Annuler
-          </Button>
-          <Button variant="primary" onClick={handleCloseModal}>
-            Valider
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 }
