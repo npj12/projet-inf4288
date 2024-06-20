@@ -12,6 +12,8 @@ const regionController = require('../controllers/region');
  *     responses:
  *      200:
  *        description: Fetched Successfully  
+ *      500:
+ *          description: Server Error
  */
 router.get('/', regionController.getAllRegions);
 
