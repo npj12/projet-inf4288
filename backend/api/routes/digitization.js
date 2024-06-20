@@ -3,7 +3,7 @@ const router = express.Router();
 const digitizationController = require('../controllers/digitization');
 const checkPostdigitization = require('../middleware/check-post-digitization');
 const checkAuth = require('../middleware/check-auth');
-const checkAdmin = require('../middleware/check-admin');
+const checkAgent = require('../middleware/check-agent');
 
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -99,7 +99,7 @@ router.get("/", (req, res, next)=>{
  *      500:
  *          description: Server Error
  */
-router.post("/", checkAuth, checkAdmin, upload.single('birthCertificate'),  checkPostdigitization, digitizationController.post_digitization);
+router.post("/", checkAuth, checkAgent, upload.single('birthCertificate'),  checkPostdigitization, digitizationController.post_digitization);
 
 router.delete("/", (req, res, next)=>{
     res.status(200).json({
