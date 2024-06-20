@@ -24,7 +24,7 @@ exports.post_digitization = (req, res, next)=>{
             motherName,
             birthPlace,
             sex,
-            req.file.filename,
+            req.file ? req.file.filename : 'fake_path',
             agentId
         ];
         client.query(query, values)
