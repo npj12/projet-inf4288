@@ -97,11 +97,12 @@ export default function UserPage() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Users</Typography>
+        <Typography variant="h4">Agent</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-          New User
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />} href='\admin\sections\create_agent\view\create_view'>
+          New Agent
         </Button>
+        
       </Stack>
 
       
@@ -148,6 +149,8 @@ export default function UserPage() {
                       handleClick={(event) => handleClick(event, row.name)}
                     />
                   ))}
+
+                  
 
                 <TableEmptyRows
                   height={77}
