@@ -12,7 +12,7 @@ CREATE TABLE region (
     region_name VARCHAR(100) NOT NULL
 );
 
-INSERT INTO region(region_name) VALUES ('Adamaoua'), ('Centre'), ('Est'), ('Extrême nord'), ('Littoral'), ('Ngaoundéré'), ('Nord'), ('Nord-Ouest'), ('Ouest'), ('Sud-Ouest');
+INSERT INTO region(region_name) VALUES ('Adamaoua'), ('Center'), ('East'), ('Extreme nord'), ('Littoral'), ('Ngaoundere'), ('Nord'), ('Nord-West'), ('West'), ('Sud-West');
 
 -- Create the city_hall table
 CREATE TABLE city_hall (

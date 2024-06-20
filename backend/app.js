@@ -8,6 +8,8 @@ const cors = require('cors');
 const authenticateRouter = require("./api/routes/authenticate");
 const digitizationRouter = require("./api/routes/digitization");
 const userRouter = require("./api/routes/user");
+const regionRouter = require("./api/routes/region");
+const cityHallRouter = require("./api/routes/city-hall");
 
 app.disable('x-powered-by'); 
 app.use(cors());
@@ -19,6 +21,8 @@ app.use(bodyParser.json());
 app.use("/api/authenticate", authenticateRouter);
 app.use("/api/digitization", digitizationRouter);
 app.use("/api/user", userRouter);
+app.use('/api/region', regionRouter);
+app.use('/api/city-hall', cityHallRouter);
 swaggerDocs(app);
 
 app.use((req, res, next)=>{
