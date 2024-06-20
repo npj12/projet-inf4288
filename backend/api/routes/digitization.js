@@ -84,9 +84,6 @@ router.get("/", (req, res, next)=>{
  *              region:
  *                type: string
  *                default: center
- *              agentId:
- *                  type: number
- *                  default: 1
  *     responses:
  *      201:
  *        description: Birth certificate successfuly digitize

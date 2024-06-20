@@ -4,8 +4,9 @@ const { getUUID } = require('../utils/get-uuid');
 
 
 exports.post_digitization = (req, res, next)=>{
-    const { birthDate, name, surname, fatherName, motherName,  birthPlace, sex, agentId, region} = req.body;
+    const { birthDate, name, surname, fatherName, motherName,  birthPlace, sex, region} = req.body;
     const client = new Client(dbConfig);
+    const agentId = req.userData.id;
     client.connect()
         .then(() => {
             const bcID = getUUID(region);

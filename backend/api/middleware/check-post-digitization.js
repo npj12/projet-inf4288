@@ -4,7 +4,6 @@ const { deleteFile } = require('../utils/delete-file');
 
 module.exports = (req, res, next) => {
     const { birthDate, name, surname, motherName, fatherName, birthPlace, sex, region} = req.body;
-    let { agentId } = req.body;
     const filePath = req.file ? req.file.path : null;
     if(!req.file && false){
         const jsonResponse = {
@@ -57,45 +56,7 @@ module.exports = (req, res, next) => {
         const jsonResponse = {error:"'region' is a required parameter", request_body: req.body};
         console.log(jsonResponse);
         return res.status(422).json(jsonResponse);
-    } else if(agentId === undefined){
-        deleteFile(filePath);
-        const jsonResponse = {error:"'agentId' is a required parameter", request_body: req.body};
-        console.log(jsonResponse);
-        return res.status(422).json(jsonResponse);
-    } else if(!Number.isInteger(agentId = parseInt(agentId))) {
-        deleteFile(filePath);
-        const jsonResponse = {error: "The 'agentId' parameter must be an integer", request_params: req.params};
-        console.log(jsonResponse);
-        return res.status(422).json(jsonResponse);
     } else {
-        const client = new Client(dbConfig);
-        client.connect()
-        .then(() => {
-            client.query('SELECT COUNT(*) AS nb FROM agent WHERE id=$1', [agentId])
-                    .then(result => {
-                        if(result.rows[0]['nb'] == 0){
-                            deleteFile(filePath);
-                            const jsonResponse = {error: "Invalid agentId parameter", request_body: req.body};
-                            console.log(jsonResponse);
-                            return res.status(422).json(jsonResponse);
-                        } else {
-                            next();
-                        }
-                    })
-                    .catch(error=>{ 
-                        const jsonResponse = {
-                            error: error
-                        };
-                        console.log(jsonResponse);
-                        return res.status(500).json(jsonResponse);
-                    });
-                })
-                .catch(error=>{ 
-                    const jsonResponse = {
-                        error: error
-                    };
-                    console.log(jsonResponse);
-                    return res.status(500).json(jsonResponse);
-                });
+        return next();
     }
 }
