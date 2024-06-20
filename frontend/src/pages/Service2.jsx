@@ -21,7 +21,7 @@ function Service2() {
             <div className="row align-items-center">
               <div className="col-md-6 order-md-2 text-center">
                 <div className="imga-box animate">
-                  <img src="assets/images/t3.jpg" alt="Service" className="responsive-img small-img" />
+                  <img src="assets/images/la-mairie-de-yaounde-vi-au-cameroun.jpg" alt="Service" className="responsive-img small-img" />
                 </div>
               </div>
               <div className="col-md-6 order-md-1 center">
