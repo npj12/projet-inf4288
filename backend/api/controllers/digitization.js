@@ -44,7 +44,7 @@ exports.post_digitization = (req, res, next)=>{
                     drawnOn, declarantName, declarationAttesterName, civilStatusRegistrar, filpePath);
                 client.query('UPDATE birth_certificate SET bc_file_path=$1 WHERE bc_uid=$2', [filpePath, bcID])
                     .then(()=>{
-                        const jsonResponse = {message:"Birth certificate numerize successfully", birthCertificateLocation: baseURL + filpePath.substring('uploads/'.length)};
+                        const jsonResponse = {message:"Birth certificate numerize successfully", bcID:bcID, birthCertificateLocation: baseURL + filpePath.substring('uploads/'.length)};
                         console.log(jsonResponse);
                         res.status(201).json(jsonResponse);
                         client.end()
