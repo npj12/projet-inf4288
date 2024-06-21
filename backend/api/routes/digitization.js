@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const digitizationController = require('../controllers/digitization');
 const checkPostdigitization = require('../middleware/check-post-digitization');
+const checkPostBirthCertificate = require('../middleware/check-post-birth-certificate');
 const checkAuth = require('../middleware/check-auth');
 const checkAgent = require('../middleware/check-agent');
 
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, 'uploads/digitize/');
     },
     filename: (req, file, cb) =>{
         cb(null, new Date().toISOString() + '_' + file.originalname);
@@ -96,7 +97,44 @@ router.get("/", (req, res, next)=>{
  *      500:
  *          description: Server Error
  */
-router.post("/", checkAuth, checkAgent, upload.single('birthCertificate'),  checkPostdigitization, digitizationController.post_digitization);
+router.post("/", checkAuth, checkAgent,  checkPostdigitization, digitizationController.post_digitization);
+
+/**
+ * @openapi
+ * '/api/digitization/birth-certificate':
+ *  patch:
+ *     tags:
+ *     - Digitization
+ *     summary: Digitize a birth certificate by adding the generate birth certificate
+ *     security:
+ *      - bearerAuth: [] 
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        multipart/form-data:
+ *           schema:
+ *            type: object
+ *            required:
+ *              bcID
+ *            properties:
+ *              bcID:
+ *                type: string
+ *                default: null
+ *              birthCertificate: 
+ *                  type: file
+ *     responses:
+ *      200:
+ *        description: Birth certificate successfuly digitize
+ *      401:
+ *          description: Invalid Token or invalid credentials
+ *      403:
+ *          description: Operation not permitted
+ *      422:
+ *          description: Invalid or Missing Parameter
+ *      500:
+ *          description: Server Error
+ */
+router.patch("/birth-certificate", checkAuth, checkAgent, upload.single('birthCertificate'), checkPostBirthCertificate, digitizationController.post_birth_certificate);
 
 router.delete("/", (req, res, next)=>{
     res.status(200).json({

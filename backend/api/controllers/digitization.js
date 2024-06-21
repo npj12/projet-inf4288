@@ -4,28 +4,35 @@ const { getUUID } = require('../utils/get-uuid');
 
 
 exports.post_digitization = (req, res, next)=>{
-    const { birthDate, name, surname, fatherName, motherName,  birthPlace, sex, region} = req.body;
+    const { 
+            birthDate, name, surname, birthPlace,region, sex,
+            fatherName, fatherBirthDate, fatherBirthPlace, fatherProfession, fatherResidence, 
+            motherName, motherBirthDate, motherBirthPlace, motherProfession, motherResidence, 
+            drawnOn, declarantName, declarationAttesterName, civilStatusRegistrar
+        } = req.body;
     const client = new Client(dbConfig);
     const agentId = req.userData.id;
     client.connect()
         .then(() => {
             const bcID = getUUID(region);
             const query = 'INSERT INTO birth_certificate \
-            (bc_uid, birth_date, name, surname, father_full_name, \
-                mother_full_name, birth_place, sex, bc_file_path, agent_id)\
+                (bc_uid, birth_date, name, surname, birth_place, sex, \
+                    father_name, father_birth_date , father_birth_place, father_profession, father_residence,\
+                    mother_name, mother_birth_date , mother_birth_place, mother_profession, mother_residence,\
+                    drawn_on, declarant_name, declaration_attester_name, civil_status_registrar, \
+                    agent_id)\
                 VALUES\
-                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)';
         const values = [
             bcID,
             birthDate,
             name,
             surname,
-            fatherName,
-            motherName,
             birthPlace,
             sex,
-            req.file ? req.file.filename : 'fake_path',
-            agentId
+            fatherName, fatherBirthDate, fatherBirthPlace, fatherProfession, fatherResidence,
+            motherName, motherBirthDate, motherBirthPlace, motherProfession, motherResidence,
+            drawnOn, declarantName, declarationAttesterName, civilStatusRegistrar, agentId
         ];
         client.query(query, values)
             .then(()=>{
@@ -57,3 +64,33 @@ exports.post_digitization = (req, res, next)=>{
             res.status(500).json(jsonResponse);
         });
 };
+
+exports.post_birth_certificate = (req, res, next)=>{
+    const client = new Client(dbConfig);
+    const agentId = req.userData.id;
+    client.connect()
+        .then(() => {
+            client.query('UPDATE birth_certificate SET bc_file_path=$1', [req.file.filename])
+                .then(()=>{
+                    const jsonResponse = {
+                        error: 'birth certtificate updated successfully'
+                    };
+                    console.log(jsonResponse);
+                    res.status(200).json(jsonResponse);
+                })
+                .catch(error=>{ 
+                    const jsonResponse = {
+                        error: error
+                    };
+                    console.log(jsonResponse);
+                    res.status(500).json(jsonResponse);
+                });
+        })
+        .catch(error=>{ 
+            const jsonResponse = {
+                error: error
+            };
+            console.log(jsonResponse);
+            res.status(500).json(jsonResponse);
+        });
+}

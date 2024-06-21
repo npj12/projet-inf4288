@@ -1,7 +1,6 @@
 const { emailRegex, dbConfig } = require("../constants");
 const { Client } = require("pg");
 const bcrypt = require("bcrypt");
-const jwt  = require("jsonwebtoken");
 
 exports.agents_get_all = (req, res, next)=>{
     const client = new Client(dbConfig);

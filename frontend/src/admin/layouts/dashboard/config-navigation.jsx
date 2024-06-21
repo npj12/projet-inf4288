@@ -10,7 +10,7 @@ const navConfig = [
   {
     title: 'Home',
     path: '/',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_home'),
   },
   {
     title: 'dashboard',
