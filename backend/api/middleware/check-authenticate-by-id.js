@@ -1,5 +1,6 @@
 const { dbConfig } = require("../constants");
 const { Client } = require("pg");
+const { deleteFile } = require('../utils/delete-file');
 
 module.exports = (req, res, next) => {
     const client = new Client(dbConfig);
