@@ -14,9 +14,9 @@ const cityHallRouter = require("./api/routes/city-hall");
 app.disable('x-powered-by'); 
 app.use(cors());
 app.use(morgan('dev'));
-app.use(express.static('./uploads'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static('./uploads'))
 
 app.use("/api/authenticate", authenticateRouter);
 app.use("/api/digitization", digitizationRouter);
