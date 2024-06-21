@@ -189,7 +189,7 @@ const SignupForm = () => {
 
     try {
       const response = await axios.post(
-        'https://projet-inf4288.onrender.com/api/user/individual/signup',
+        process.env.BASE_URL + 'user/individual/signup',
         {
           name,
           surname,

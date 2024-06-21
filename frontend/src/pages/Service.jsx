@@ -10,7 +10,7 @@ function Service() {
         <section className="hero_section">
           <div className="container">
             <div className="hero_content">
-              <h1>Authenticated your Birth Certificate</h1>
+              <h1>Authenticate your Birth Certificate</h1>
               <p>Authenticate your birth certificate with SANDO to ensure its validity and protect against fraud.</p>
             </div>
           </div>

@@ -169,7 +169,7 @@ const LoginForm = () => {
     setIsLoading(true); // Start loading indicator
 
     try {
-      const response = await axios.post('https://projet-inf4288.onrender.com/api/user/login', { login, password }, {
+      const response = await axios.post(process.env.BASE_URL + 'user/login', { login, password }, {
         headers: {
           'Content-Type': 'application/json',
         },

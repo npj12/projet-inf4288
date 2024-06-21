@@ -21,7 +21,7 @@ function Authentification() {
 
     try {
       // Make API call to retrieve PDF link
-      const response = await axios.get(`https://projet-inf4288.onrender.com/api/authenticate/${identificationNumber}`, {
+      const response = await axios.get(`process.env.BASE_URLauthenticate/${identificationNumber}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('token'),

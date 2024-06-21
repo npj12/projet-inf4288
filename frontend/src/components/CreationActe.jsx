@@ -36,7 +36,7 @@ function CreationActe() {
   useEffect(() => {
     const fetchRegions = async () => {
       try {
-        const response = await axios.get('https://projet-inf4288.onrender.com/api/region');
+        const response = await axios.get(process.env.BASE_URL + 'region');
         const regionNames = response.data.map(region => region.region_name);
         setRegions(regionNames);
       } catch (error) {
@@ -144,7 +144,7 @@ function CreationActe() {
     setLoading(true);
 
     try {
-      const response = await axios.post('https://projet-inf4288.onrender.com/api/digitization', formData, {
+      const response = await axios.post(process.env.BASE_URL + 'digitization', formData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('token')

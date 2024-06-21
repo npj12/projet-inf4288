@@ -172,7 +172,7 @@ const SignupForm = () => {
   useEffect(() => {
     const fetchMairies = async () => {
       try {
-        const response = await axios.get('https://projet-inf4288.onrender.com/api/city-hall');
+        const response = await axios.get(process.env.BASE_URL + 'city-hall');
         setMairies(response.data);
       } catch (error) {
         console.error('Error fetching mairies:', error);
@@ -205,7 +205,7 @@ const SignupForm = () => {
     try {
       const token = localStorage.getItem('token'); // Retrieve token from localStorage
       const response = await axios.post(
-        'https://projet-inf4288.onrender.com/api/user/agent/signup',
+        process.env.BASE_URL + 'user/agent/signup',
         {
           name,
           surname,
