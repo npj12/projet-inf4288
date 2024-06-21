@@ -33,5 +33,11 @@ exports.post_authenticate_by_bcid = (req, res, next)=>{
 }
 
 exports.post_authenticate_by_file = (req, res, next)=>{
+    if(req.file){
 
+    } else {
+        const jsonResponse = {error:"Provide a birth certificate", request_body: req.body};
+        console.log(jsonResponse);
+        return res.status(422).json(jsonResponse);
+    }
 }

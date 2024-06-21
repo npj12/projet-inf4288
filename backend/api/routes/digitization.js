@@ -101,7 +101,7 @@ router.post("/", checkAuth, checkAgent,  checkPostdigitization, digitizationCont
 
 /**
  * @openapi
- * '/api/digitization/birth-certificate':
+ * unknow:
  *  patch:
  *     tags:
  *     - Digitization
@@ -134,8 +134,9 @@ router.post("/", checkAuth, checkAgent,  checkPostdigitization, digitizationCont
  *      500:
  *          description: Server Error
  */
+/*
 router.patch("/birth-certificate", checkAuth, checkAgent, upload.single('birthCertificate'), checkPostBirthCertificate, digitizationController.post_birth_certificate);
-
+*/
 router.delete("/", (req, res, next)=>{
     res.status(200).json({
         message: "Digitizations deleted successfully"

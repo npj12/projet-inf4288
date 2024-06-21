@@ -63,6 +63,29 @@ router.get("/", (req, res, next)=>{
  */
 router.get("/:bcID", checkAuth, checkIndividual, checkAuthenticateByBcID, authenticateController.post_authenticate_by_bcid);
 
+/**
+ * @openapi
+ * /api/authenticate:
+ *  post:
+ *     tags:
+ *     - Authenticate
+ *     summary: Authenticate a birth certificate with a physical copy
+ *     security:
+ *      - bearerAuth: [] 
+ *     requestBody:
+ *      required: true
+ *     responses:
+ *      201:
+ *        description: Birth certificate successfuly digitize
+ *      401:
+ *          description: Invalid Token or invalid credentials
+ *      403:
+ *          description: Operation not permitted
+ *      422:
+ *          description: Invalid or Missing Parameters 
+ *      500:
+ *          description: Server Error
+ */
 router.post("/", checkAuth, checkIndividual, upload.single('birthCertificate'), authenticateController.post_authenticate_by_file);
 
 router.get("/:id", (req, res, next) =>{
