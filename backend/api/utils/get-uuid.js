@@ -1,4 +1,4 @@
-const sha1 = require('crypto-js/sha1');
+const sha1 = require('crypto-js/sha256');
 
 let mapRegion = function(regionName){
     switch(regionName){
