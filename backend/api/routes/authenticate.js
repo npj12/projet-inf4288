@@ -35,6 +35,32 @@ router.get("/", (req, res, next)=>{
     });
 });
 
+/**
+ * @openapi
+ * '/api/authenticate/{bcID}':
+ *  get:
+ *     tags:
+ *     - Authenticate
+ *     summary: Authenticate a birth certificate by his ID
+ *     security:
+ *      - bearerAuth: [] 
+ *     parameters:
+ *      -   name: bcID
+ *          in: path
+ *          description: The birth certificate id 
+ *          required: true 
+ *     responses:
+ *      200:
+ *          description: Fetched Successfully
+ *      401:
+ *          description: Invalid Token
+ *      403:
+ *          description: Operation not permitted
+ *      422:
+ *          description: Invalid individual id
+ *      500:
+ *          description: Server Error
+ */
 router.get("/:bcID", checkAuth, checkIndividual, checkAuthenticateByBcID, authenticateController.post_authenticate_by_bcid);
 
 router.post("/", checkAuth, checkIndividual, upload.single('birthCertificate'), authenticateController.post_authenticate_by_file);
