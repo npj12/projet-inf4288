@@ -8,7 +8,7 @@ function Service2() {
         <section className="hero_section">
           <div className="container">
             <div className="hero_content">
-              <h1>Digitization a new Birth Certificate</h1>
+              <h1>Digitization of a new birth certificate</h1>
               <p>
               Create your birth certificate with SANDO for a seamless and secure process. Our platform guides you through the steps to generate a legitimate birth certificate, verified by government records.
               </p>
