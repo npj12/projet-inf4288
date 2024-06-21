@@ -96,7 +96,7 @@ router.get("/", (req, res, next)=>{
  *      500:
  *          description: Server Error
  */
-router.post("/", checkAuth, checkAgent, upload.single('birthCertificate'),  checkPostdigitization, digitizationController.post_digitization);
+router.post("/", checkAuth, checkAgent,  checkPostdigitization, digitizationController.post_digitization);
 
 router.delete("/", (req, res, next)=>{
     res.status(200).json({

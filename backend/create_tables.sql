@@ -60,7 +60,7 @@ CREATE TABLE birth_certificate (
     surname VARCHAR(100) NOT NULL,
     birth_place VARCHAR(200) NOT NULL,
     sex CHAR(1) NOT NULL,
-    bc_file_path VARCHAR(255) NOT NULL,
+    bc_file_path VARCHAR(255),
     father_name VARCHAR(100) NOT NULL,
     father_birth_date DATE NOT NULL,
     father_birth_place VARCHAR(100) NOT NULL,
