@@ -2,7 +2,7 @@
     - On linux type the command: 
        ## npm install 
     - On windows type the command:
-    Fist go to the official Node.js website and download: nodejs.org and install. After that type the following command:
+    Fist go to the official Node.js website and download: nodejs.org and install. After that type the following command in the command line interface:
        ## npm install -g npm
 
 # Start the system
