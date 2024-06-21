@@ -111,7 +111,7 @@ router.post("/", checkAuth, checkAgent,  checkPostdigitization, digitizationCont
  *     requestBody:
  *      required: true
  *      content:
- *        application/json:
+ *        multipart/form-data:
  *           schema:
  *            type: object
  *            required:
@@ -120,8 +120,10 @@ router.post("/", checkAuth, checkAgent,  checkPostdigitization, digitizationCont
  *              bcID:
  *                type: string
  *                default: null
+ *              birthCertificate: 
+ *                  type: file
  *     responses:
- *      201:
+ *      200:
  *        description: Birth certificate successfuly digitize
  *      401:
  *          description: Invalid Token or invalid credentials
