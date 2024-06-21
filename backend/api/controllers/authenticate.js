@@ -9,7 +9,7 @@ exports.post_authenticate_by_bcid = (req, res, next)=>{
                .then(result=>{
                     const jsonResponse = {
                         birthCertificateInformations: result.rows[0],
-                        birthCertificateLocation: baseURL + result.rows[0]['bc_file_path'].substring('uploads/'.length)
+                        // birthCertificateLocation: baseURL + result.rows[0]['bc_file_path'].substring('uploads/'.length)
                     };
                     console.log(jsonResponse);
                     res.status(200).json(jsonResponse);
