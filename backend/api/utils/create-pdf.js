@@ -1,11 +1,18 @@
 const { jsPDF } = require('jspdf');
+const fs = require('fs');
 
 let createActe = (identificationNumber, surname, name, birthDate, region, birthPlace, sex,
     fatherName, fatherBirthDate, fatherBirthPlace, fatherProfession, fatherResidence,
     motherName, motherBirthDate, motherBirthPlace, motherProfession, motherResidence,
-    drawnOn, declarantName, declarationAttesterName, civilStatusRegistrar, path)=>{
+    drawnOn, declarantName, declarationAttesterName, civilStatusRegistrar, path) => {
+    
     const doc = new jsPDF();
     let y = 60; // Start further down to create space for the image
+
+    // Read the image file and convert it to Base64
+    const imagePath = '../favicon1.png';
+    const imageData = fs.readFileSync(imagePath).toString('base64');
+    const imageBase64 = `data:image/png;base64,${imageData}`;
 
     // Republic of Cameroon header
     doc.setFontSize(10);
@@ -15,7 +22,7 @@ let createActe = (identificationNumber, surname, name, birthDate, region, birthP
     doc.text('Peace - Work - Fatherland', 20, 15);
 
     // Seal image
-    doc.addImage('../favicon1.png', 'JPEG', 70, 10, 30, 30); // Reduce image size
+    doc.addImage(imageBase64, 'PNG', 70, 10, 30, 30); // Use the Base64 string
 
     // Republic of Cameroon header (French)
     doc.setFontSize(10);
@@ -41,7 +48,7 @@ let createActe = (identificationNumber, surname, name, birthDate, region, birthP
         doc.setFont('helvetica', 'bold');
         doc.text(label, 15, y);
         doc.setFont('helvetica', 'normal');
-        doc.text('__________________________________', 105, y);
+        doc.text('______________', 105, y);
         doc.text(value, 110, y);
         y += 10;  // Adjust this value for spacing between lines
     };
@@ -67,7 +74,7 @@ let createActe = (identificationNumber, surname, name, birthDate, region, birthP
     addField('Drawn on the:', drawnOn);
     addField('With accordance to the declaration of:', declarantName);
     addField('Who attested to the truth of the declaration:', declarationAttesterName);
-    addField('By the civil statuts Registrar for:', civilStatusRegistrar);
+    addField('By the civil status Registrar for:', civilStatusRegistrar);
 
     // Add signature at the bottom right
     doc.text('Signature:', 150, 280);
@@ -75,7 +82,6 @@ let createActe = (identificationNumber, surname, name, birthDate, region, birthP
 
     doc.save(path);
 };
-
 
 module.exports = {
     createActe
