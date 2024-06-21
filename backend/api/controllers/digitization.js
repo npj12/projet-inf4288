@@ -1,7 +1,7 @@
 const { Client } = require('pg');
 const { dbConfig } = require("../constants");
 const { getUUID } = require('../utils/get-uuid');
-const { createActe } = require('../utils/create-pdf');
+//const { createActe } = require('../utils/create-pdf');
 
 
 exports.post_digitization = (req, res, next)=>{
