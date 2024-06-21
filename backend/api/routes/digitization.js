@@ -9,7 +9,7 @@ const checkAgent = require('../middleware/check-agent');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, 'uploads/digitize/');
     },
     filename: (req, file, cb) =>{
         cb(null, new Date().toISOString() + '_' + file.originalname);
