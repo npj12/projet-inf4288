@@ -6,7 +6,7 @@
        ## npm install -g npm
 
 # Start the system
-Before starting the program you must first be at the “frontend” folder. After that type the command:
+   Before starting the program you must first be at the “frontend” folder. After that type the command always in the command line interface:
       ## npm start
       Now the program start automaticaly and open the browser
 
