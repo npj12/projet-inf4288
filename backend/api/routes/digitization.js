@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/digitize/');
     },
     filename: (req, file, cb) =>{
-        cb(null, new Date().toISOString() + '_' + file.originalname);
+        cb(null, new Date().toISOString() + '_' + file.originalname.replaceAll(' ', '_'));
     }
 });
 

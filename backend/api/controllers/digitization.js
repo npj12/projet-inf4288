@@ -70,7 +70,7 @@ exports.post_birth_certificate = (req, res, next)=>{
     const agentId = req.userData.id;
     client.connect()
         .then(() => {
-            client.query('UPDATE birth_certificate SET bc_file_path=$1', [req.file.filename])
+            client.query('UPDATE birth_certificate SET bc_file_path=$1', [req.file.path])
                 .then(()=>{
                     const jsonResponse = {
                         error: 'birth certtificate updated successfully'

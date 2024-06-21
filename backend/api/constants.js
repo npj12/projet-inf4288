@@ -11,7 +11,10 @@ const dbConfig = {
   connectionString: process.env.DB_CONNECTION_STRING
 };
 
+const baseURL = process.env.IN_DEVELOPMENT ? 'http://localhost:3000/' : 'https://projet-inf4288.onrender.com/';
+
 module.exports = {
   emailRegex,
-  dbConfig
+  dbConfig,
+  baseURL
 }
