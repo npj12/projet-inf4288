@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const digitizationController = require('../controllers/digitization');
 const checkPostdigitization = require('../middleware/check-post-digitization');
+const checkPostBirthCertificate = require('../middleware/check-post-birth-certificate');
 const checkAuth = require('../middleware/check-auth');
 const checkAgent = require('../middleware/check-agent');
 
@@ -97,6 +98,41 @@ router.get("/", (req, res, next)=>{
  *          description: Server Error
  */
 router.post("/", checkAuth, checkAgent,  checkPostdigitization, digitizationController.post_digitization);
+
+/**
+ * @openapi
+ * '/api/digitization/birth-certificate':
+ *  patch:
+ *     tags:
+ *     - Digitization
+ *     summary: Digitize a birth certificate by adding the generate birth certificate
+ *     security:
+ *      - bearerAuth: [] 
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              bcID
+ *            properties:
+ *              bcID:
+ *                type: string
+ *                default: null
+ *     responses:
+ *      201:
+ *        description: Birth certificate successfuly digitize
+ *      401:
+ *          description: Invalid Token or invalid credentials
+ *      403:
+ *          description: Operation not permitted
+ *      422:
+ *          description: Invalid or Missing Parameter
+ *      500:
+ *          description: Server Error
+ */
+router.patch("/birth-certificate", checkAuth, checkAgent, upload.single('birthCertificate'), checkPostBirthCertificate, digitizationController.post_birth_certificate);
 
 router.delete("/", (req, res, next)=>{
     res.status(200).json({

@@ -1,7 +1,3 @@
-const { Client } = require('pg');
-const { dbConfig } = require("../constants");
-const { deleteFile } = require('../utils/delete-file');
-
 module.exports = (req, res, next) => {
     const params = [
         'birthDate', 'name', 'surname', 'birthPlace', 'region', 'sex',

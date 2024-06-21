@@ -64,3 +64,33 @@ exports.post_digitization = (req, res, next)=>{
             res.status(500).json(jsonResponse);
         });
 };
+
+exports.post_birth_certificate = (req, res, next)=>{
+    const client = new Client(dbConfig);
+    const agentId = req.userData.id;
+    client.connect()
+        .then(() => {
+            client.query('UPDATE birth_certificate SET bc_file_path=$1', [req.file.filename])
+                .then(()=>{
+                    const jsonResponse = {
+                        error: 'birth certtificate updated successfully'
+                    };
+                    console.log(jsonResponse);
+                    res.status(200).json(jsonResponse);
+                })
+                .catch(error=>{ 
+                    const jsonResponse = {
+                        error: error
+                    };
+                    console.log(jsonResponse);
+                    res.status(500).json(jsonResponse);
+                });
+        })
+        .catch(error=>{ 
+            const jsonResponse = {
+                error: error
+            };
+            console.log(jsonResponse);
+            res.status(500).json(jsonResponse);
+        });
+}
