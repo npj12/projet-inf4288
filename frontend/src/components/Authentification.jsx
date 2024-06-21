@@ -17,26 +17,29 @@ function Authentification() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setPdfUrl('');
 
     try {
-      const response = await axios.get(
-        `https://projet-inf4288.onrender.com/api/authenticate/${identificationNumber}`,
-        {
-          responseType: 'blob', // Important: Tell Axios to expect a blob response
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        }
-      );
+      // Make API call to retrieve PDF link
+      const response = await axios.get(`https://projet-inf4288.onrender.com/api/authenticate/${identificationNumber}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        },
+      });
 
-      const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
+      // Extract PDF URL from response data
+      const pdfUrl = response.data.birthCertificateLocation;
       setPdfUrl(pdfUrl);
     } catch (error) {
-      console.error('Error fetching PDF:', error);
-      setError('Identification number incorrect or PDF not found.');
-      setPdfUrl(''); // Clear previous pdfUrl if there was an error
+      console.error('Identification number invalide:', error);
+      if (error.response && error.response.status === 404) {
+        setError('PDF not found for that d\'identification number.');
+      } else if (error.response && error.response.status === 401) {
+        setError('Unauthorized. Please verify your token.');
+      } else {
+        setError('An error occurred while retrieving the PDF.');
+      }
     } finally {
       setLoading(false);
     }
@@ -51,22 +54,22 @@ function Authentification() {
           <input
             type="text"
             className="form-control"
-            placeholder="Enter the identification number"
+            placeholder="Entrez le numéro d'identification"
             value={identificationNumber}
             onChange={(e) => setIdentificationNumber(e.target.value)}
             required
           />
         </div>
         <div className="form-group">
-          <label>OR upload a digital file:</label>
+          <label>OR download a digital file:</label>
           <input type="file" className="form-control" />
         </div>
         <div className="button-container">
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Loading...' : 'Validate'}
+            {loading ? 'Loading...' : 'Validation'}
           </button>
           <button type="button" className="btn btn-secondary" onClick={handleBack}>
-            Back
+            Retour
           </button>
         </div>
       </form>
@@ -78,7 +81,7 @@ function Authentification() {
       {pdfUrl && (
         <div className="pdf-container mt-3">
           <h3>Birth Certificate PDF</h3>
-          <embed src={pdfUrl} type="application/pdf" width="100%" height="600px" />
+          <embed src={pdfUrl} type="application/pdf" width="1000px" height="800px" style={{ border: '1px solid #ccc' }} />
         </div>
       )}
     </div>
