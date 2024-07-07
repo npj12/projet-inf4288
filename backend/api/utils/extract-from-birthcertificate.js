@@ -3,37 +3,7 @@ const { createCanvas, loadImage } = require('canvas');
 const { PDFImage } = require('pdf-image');
 const { createWorker }  = require('tesseract.js');
 const { correct, correctName }  = require('./test-auto-correct');
-
-const coordinates_region = { x: 90, y: 48, width: 150, height: 20 }; 
-const coordinates_departement = { x: 90, y: 92, width: 150, height: 17 }; 
-const coordinates_arrondissement = { x: 90, y: 128, width: 150, height: 17 }; 
-const coordinates_numero_acte = { x: 353, y: 176, width: 60, height: 21 }; 
-
-const coordinates_nom_enfant = {x: 178, y: 216, width: 418, height: 25};
-const coordinates_date_naissance_enfant = {x: 150, y: 240, width: 445, height: 25};
-const coordinates_lieu_naissance_enfant = {x: 148, y: 265, width: 448, height: 25};
-const coordinates_sex = {x: 183, y: 313, width: 410, height: 23};
-
-const coordinates_nom_pere = {x: 133, y: 337, width: 450, height: 23};
-const coordinates_lieu_naissance_pere = {x: 165, y: 361, width: 380, height: 22};
-const coordinates_residence_pere = {x: 159, y: 384, width: 380, height: 23};
-const coordinates_profession_pere = {x: 216, y: 410, width: 380, height: 23};
-
-const coordinates_nom_mere = {x: 177, y: 433, width: 418, height: 22};
-const coordinates_lieu_naissance_mere = {x: 164, y: 456, width: 430, height: 23};
-const coordinates_date_naissance_mere = {x: 146, y: 481, width: 450, height: 23};
-const coordinates_residence_mere = {x: 157, y: 504, width: 438, height: 23};
-const coordinates_profession_mere = {x: 219, y: 528, width: 376, height: 23};
-
-const coordinates_dresse_le = {x: 139, y: 550, width: 456, height: 23};
-const coordinates_sur_la_declaration_de1 = {x: 196, y: 575, width: 399, height: 23};
-const coordinates_sur_la_declaration_de2 =  {x: 95, y: 607, width: 500, height: 20};
-const coordinates_par_nous1 = {x: 132, y: 654, width: 463, height: 17}; 
-const coordinates_par_nous2 = {x: 92, y: 666, width: 365, height: 15};
-const coordinates_etat_civil_centre_de = {x: 222, y: 678, width: 373, height: 16};
-const coordinates_assiste_de = {x: 143, y: 703, width: 452, height: 17};
-
-const baseToBDFiles = '/home/user/Downloads';
+const { birth_certificate_coordinates, baseToBDFiles } = require('../constants');
 
 let pdfToImage = async (filePath) => {
   const pdfImage = new PDFImage(filePath, { combinedImage: true });
@@ -71,34 +41,34 @@ let extract = async (filePath) => {
   // Convertir la première page du PDF en image
   const imagePath = await pdfToImage(filePath);
 
-  const region = await correct(await extractFromImage(imagePath, coordinates_region), `${baseToBDFiles}/regions.csv`);
-  const division = await correct(await extractFromImage(imagePath, coordinates_departement), `${baseToBDFiles}/departements.csv`);
-  const subdivision = await correct(await extractFromImage(imagePath, coordinates_arrondissement), `${baseToBDFiles}/arrondissements.csv`);
-  const numero_acte = await extractFromImage(imagePath, coordinates_numero_acte);
+  const region = await correct(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_region), `${baseToBDFiles}/regions.csv`);
+  const division = await correct(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_departement), `${baseToBDFiles}/departements.csv`);
+  const subdivision = await correct(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_arrondissement), `${baseToBDFiles}/arrondissements.csv`);
+  const numero_acte = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_numero_acte);
 
-  const name = await correctName(await extractFromImage(imagePath, coordinates_nom_enfant), `${baseToBDFiles}/noms.csv`);
-  const birthDate = await extractFromImage(imagePath, coordinates_date_naissance_enfant);
-  const birthPlace = await extractFromImage(imagePath, coordinates_lieu_naissance_enfant);
-  const sex = await extractFromImage(imagePath, coordinates_sex);
+  const name = await correctName(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_nom_enfant), `${baseToBDFiles}/noms.csv`);
+  const birthDate = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_date_naissance_enfant);
+  const birthPlace = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_lieu_naissance_enfant);
+  const sex = await correct(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_sex), `${baseToBDFiles}/sex.csv`);
 
-  const fatherName = await extractFromImage(imagePath, coordinates_nom_pere);
-  const fatherBirthPlace = await extractFromImage(imagePath, coordinates_lieu_naissance_pere);
-  const fatherResidence = await extractFromImage(imagePath, coordinates_residence_pere);
-  const fatherOccupation = await extractFromImage(imagePath, coordinates_profession_pere);
+  const fatherName = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_nom_pere);
+  const fatherBirthPlace = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_lieu_naissance_pere);
+  const fatherResidence = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_residence_pere);
+  const fatherOccupation = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_profession_pere);
 
-  const motherName = await extractFromImage(imagePath, coordinates_nom_mere);
-  const motherBirthPlace = await extractFromImage(imagePath, coordinates_lieu_naissance_mere);
-  const motherBirthDate = await extractFromImage(imagePath, coordinates_date_naissance_mere);
-  const motherResidence = await extractFromImage(imagePath, coordinates_residence_mere);
-  const motherOccupation = await extractFromImage(imagePath, coordinates_profession_mere);
+  const motherName = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_nom_mere);
+  const motherBirthPlace = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_lieu_naissance_mere);
+  const motherBirthDate = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_date_naissance_mere);
+  const motherResidence = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_residence_mere);
+  const motherOccupation = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_profession_mere);
 
-  const drawnOn = await extractFromImage(imagePath, coordinates_dresse_le);
-  const declarantName1 = await extractFromImage(imagePath, coordinates_sur_la_declaration_de1);
-  const declarantName2 = await extractFromImage(imagePath, coordinates_sur_la_declaration_de2);
-  const byUs1 = await extractFromImage(imagePath, coordinates_par_nous1);
-  const byUs2 = await extractFromImage(imagePath, coordinates_par_nous2);
-  const civilStatusRegister = await extractFromImage(imagePath, coordinates_etat_civil_centre_de);
-  const inThePresenceOf = await extractFromImage(imagePath, coordinates_assiste_de);
+  const drawnOn = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_dresse_le);
+  const declarantName1 = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_sur_la_declaration_de1);
+  const declarantName2 = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_sur_la_declaration_de2);
+  const byUs1 = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_par_nous1);
+  const byUs2 = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_par_nous2);
+  const civilStatusRegister = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_etat_civil_centre_de);
+  const inThePresenceOf = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_assiste_de);
   
   fs.unlinkSync(imagePath);
 
