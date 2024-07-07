@@ -34,6 +34,4 @@ let getUUID = function(regionName){
     return (currentDate.getUTCFullYear().toString().substring(2) +  mapRegion(regionName) + sha1(currentDate.toISOString()).toString().substring(0, 8)).toUpperCase();
 }
 
-module.exports = {
-    getUUID
-}
+module.exports = getUUID;

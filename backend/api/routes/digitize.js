@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const digitizationController = require('../controllers/digitize');
+const checkPostDigitization = require('../middleware/check-post-digitization');
+const creerActe = require('../middleware/creer-acte');
 
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -34,36 +36,37 @@ const upload = multer({
  *  post:
  *     tags:
  *     - Digitization
- *     summary: Digitize a birth certificate
+ *     summary: extraire les informations d'un acte de naissance
  *     requestBody:
  *      required: true
  *      content:
- *        application/json:
+ *        multipart/form-data:
  *           schema:
  *            type: object
  *            required:
- *              - birthCertificate
+ *              - acte
  *            properties:
- *              birthCertificate:
- *                type: file
+ *              acte:
+ *                type: string
+ *                format: binary
  *     responses:
- *      201:
- *        description: Birth certificate successfuly digitize
+ *      200:
+ *        description: Les informations ont ete extraits avec succes
  *      422:
- *          description: Invalid or Missing Parameters 
+ *          description: Parametres invalides ou manquant
  *      500:
  *          description: Server Error
  */
-router.post("/extract", upload.single('birthCertificate'), digitizationController.post_extract);
+router.post("/extract", upload.single('acte'), digitizationController.post_extract);
 
 
 /**
  * @openapi
- * '/api/digitize/extract':
+ * '/api/digitize/':
  *  post:
  *     tags:
  *     - Digitization
- *     summary: Digitize a birth certificate
+ *     summary: stocke les informations d'un acte de naissance sur le serveur
  *     requestBody:
  *      required: true
  *      content:
@@ -73,21 +76,63 @@ router.post("/extract", upload.single('birthCertificate'), digitizationControlle
  *            required:
  *              - birthCertificate
  *            properties:
- *              birthDate:
- *                type: file
- *                default: 01/01/1900 
+ *              region:
+ *                  type: string
+ *              departement:
+ *                  type: string
+ *              arrondissement:
+ *                  type: string
+ *              numeroAacte:
+ *                  type: string
+ *              nomEnfant:
+ *                  type: string 
+ *              dateNaissanceEnfant:
+ *                  type: string 
+ *              lieuNaissanceEnfant:
+ *                  type: string
+ *              sexe:
+ *                  type: string
+ *              nomPere:
+ *                  type: string
+ *              lieuNaissancePere:
+ *                  type: string
+ *              residencePere:
+ *                  type: string
+ *              professionPere:
+ *                  type: string
+ *              nomMere:
+ *                  type: string 
+ *              lieuNaissanceMere:
+ *                  type: string
+ *              dateNaissanceMere:
+ *                  type: string
+ *              residenceMere:
+ *                  type: string
+ *              professionMere:
+ *                  type: string
+ *              dresseLe:
+ *                  type: string 
+ *              surLaDeclarationDe1:
+ *                  type: string
+ *              surLaDeclarationDe2:
+ *                  type: string
+ *              parNous1:
+ *                  type: string
+ *              parNous2:
+ *                  type: string 
+ *              etatCivilCentreDe:
+ *                  type: string
+ *              assisteDe:
+ *                  type: string
+    
  *     responses:
  *      201:
- *        description: Birth certificate successfuly digitize
- *      401:
- *          description: Invalid Token or invalid credentials
- *      403:
- *          description: Operation not permitted
+ *        description: Acte de naissance numerisee avec succes
  *      422:
  *          description: Invalid or Missing Parameters 
  *      500:
  *          description: Server Error
  */
-router.post("/", digitizationController.post_digitization);
+router.post("/", checkPostDigitization, creerActe, digitizationController.post_digitization);
 
 module.exports = router;
