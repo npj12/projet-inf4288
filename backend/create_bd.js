@@ -1,5 +1,5 @@
 const { Client } = require('pg');
-const { dbConfig } = require("../constants");
+const { dbConfig } = require("./api/constants");
 
 
 const client = new Client(dbConfig);
