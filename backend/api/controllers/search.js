@@ -18,6 +18,9 @@ exports.get_search = (req, res, next) => {
                 `;
             client.query(query, values)
                 .then((resultat)=>{
+                    resultat.rows.forEach(row => {
+                        row.chemin = `${baseURL}${row.chemin}`;
+                    });
                     const jsonResponse = {
                         nbActes: resultat.rowCount,
                         actes: resultat.rows

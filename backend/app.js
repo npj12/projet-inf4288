@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const swaggerDocs = require("./swagger.js");
 const cors = require('cors');
 
+require('./create_bd.js');
+
 const authenticateRouter = require("./api/routes/authenticate");
 const digitizationRouter = require("./api/routes/digitize");
 const searchRouter = require("./api/routes/search");
