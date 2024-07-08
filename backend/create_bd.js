@@ -34,7 +34,7 @@ client.connect()
     cheminVersActe VARCHAR(255)
 );
 `;
-            client.query(query, values)
+            client.query(query)
                 .then((resultat)=>{
                     console.log('Base de donnee cree');
                 })
