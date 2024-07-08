@@ -3,7 +3,6 @@ const { Client } = require("pg");
 const fs = require('fs');
 const { importLeven } = require('../utils/test-auto-correct');
 exports.post_authenticate = async (req, res, next)=>{
-    if(req.file){
         const client = new Client(dbConfig);
         client.connect()
             .then(() => {
@@ -12,8 +11,8 @@ exports.post_authenticate = async (req, res, next)=>{
                 .then(async (resultat)=>{
                     let acteNumerise = undefined;
                     resultat.rows.forEach(row => {
-                        console.log(req.file.path.replaceAll('authenticate', 'digitize'), row.cheminversacte);
-                        if(req.file.path.replaceAll('authenticate', 'digitize') == row.cheminversacte){
+                        console.log(req.body.chemin.replaceAll('authenticate', 'digitize'), row.cheminversacte);
+                        if(req.body.chemin.replaceAll('authenticate', 'digitize') == row.cheminversacte){
                             acteNumerise = row;
                         }
                     }); 
@@ -25,7 +24,6 @@ exports.post_authenticate = async (req, res, next)=>{
                         return res.status(422).json(jsonResponse);
                     }
                     
-                    fs.unlinkSync(req.file.path);
                     const diffence = await diff(req.body, acteNumerise);
                     const pourcentageDeSimilarite = 100 - diffence.total; 
                     return res.status(200).json({
@@ -50,12 +48,6 @@ exports.post_authenticate = async (req, res, next)=>{
                 console.log(jsonResponse);
                 return res.status(500).json(jsonResponse);
             });
-        console.log(req.file);
-    } else {
-        const jsonResponse = {error:'Uploader un fichier dans le chanp \'acte\'', request_body: req.body};
-        console.log(jsonResponse);
-        return res.status(422).json(jsonResponse);
-    }
 }
 
 let diff = async (body, acteNumerise)=>{

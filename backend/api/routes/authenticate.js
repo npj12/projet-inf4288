@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authenticateController = require("../controllers/authenticate");
+const digitizationController = require("../controllers/digitize");
 
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -36,15 +37,12 @@ const upload = multer({
  *     requestBody:
  *      required: true
  *      content:
- *        multipart/form-data:
+ *        application/json:
  *           schema:
  *            type: object
- *            required:
- *              - acte
  *            properties:
- *              acte:
+ *              chemin:
  *                type: string
- *                format: binary
  *              region:
  *                  type: string
  *              departement:
@@ -101,6 +99,35 @@ const upload = multer({
  *      500:
  *          description: Server Error
  */
-router.post("/", upload.single('acte'), authenticateController.post_authenticate);
+router.post("/", authenticateController.post_authenticate);
+
+/**
+ * @openapi
+ * '/api/authenticate/extract':
+ *  post:
+ *     tags:
+ *     - Authenticate
+ *     summary: extraire les informations d'un acte de naissance
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        multipart/form-data:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - acte
+ *            properties:
+ *              acte:
+ *                type: string
+ *                format: binary
+ *     responses:
+ *      200:
+ *        description: Les informations ont ete extraits avec succes
+ *      422:
+ *          description: Parametres invalides ou manquant
+ *      500:
+ *          description: Server Error
+ */
+router.post("/extract", upload.single('acte'), digitizationController.post_extract);
 
 module.exports = router;
