@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/authenticate/');
     },
     filename: (req, file, cb) =>{
-        cb(null, new Date().toISOString() + '_' + file.originalname.replaceAll(' ', '_'));
+        cb(null, file.originalname.replaceAll(' ', '_'));
     }
 });
 
@@ -45,6 +45,54 @@ const upload = multer({
  *              acte:
  *                type: string
  *                format: binary
+ *              region:
+ *                  type: string
+ *              departement:
+ *                  type: string
+ *              arrondissement:
+ *                  type: string
+ *              numeroActe:
+ *                  type: string
+ *              nomEnfant:
+ *                  type: string 
+ *              dateNaissanceEnfant:
+ *                  type: string 
+ *              lieuNaissanceEnfant:
+ *                  type: string
+ *              sexe:
+ *                  type: string
+ *              nomPere:
+ *                  type: string
+ *              lieuNaissancePere:
+ *                  type: string
+ *              residencePere:
+ *                  type: string
+ *              professionPere:
+ *                  type: string
+ *              nomMere:
+ *                  type: string 
+ *              lieuNaissanceMere:
+ *                  type: string
+ *              dateNaissanceMere:
+ *                  type: string
+ *              residenceMere:
+ *                  type: string
+ *              professionMere:
+ *                  type: string
+ *              dresseLe:
+ *                  type: string 
+ *              surLaDeclarationDe1:
+ *                  type: string
+ *              surLaDeclarationDe2:
+ *                  type: string
+ *              parNous1:
+ *                  type: string
+ *              parNous2:
+ *                  type: string 
+ *              etatCivilCentreDe:
+ *                  type: string
+ *              assisteDe:
+ *                  type: string
  *     responses:
  *      200:
  *        description: La comparaison s'est bien passee

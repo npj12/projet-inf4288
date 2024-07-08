@@ -127,6 +127,7 @@ let addToDict = async (mot, cheminVersLeDict) => {
 module.exports = { 
     correct,
     correctNom,
-    addToDict
+    addToDict, 
+    importLeven
 };
 
