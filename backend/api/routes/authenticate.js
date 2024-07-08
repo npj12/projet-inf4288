@@ -28,27 +28,31 @@ const upload = multer({
 
 /**
  * @openapi
- * /api/authenticate:
+ * '/api/authenticate/':
  *  post:
  *     tags:
  *     - Authenticate
- *     summary: Authenticate a birth certificate with a physical copy
- *     security:
- *      - bearerAuth: [] 
+ *     summary: Verifier l'authenticite d'un acte de naissance
  *     requestBody:
  *      required: true
+ *      content:
+ *        multipart/form-data:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - acte
+ *            properties:
+ *              acte:
+ *                type: string
+ *                format: binary
  *     responses:
- *      201:
- *        description: Birth certificate successfuly digitize
- *      401:
- *          description: Invalid Token or invalid credentials
- *      403:
- *          description: Operation not permitted
+ *      200:
+ *        description: La comparaison s'est bien passee
  *      422:
- *          description: Invalid or Missing Parameters 
+ *          description: Parametres invalides ou manquant
  *      500:
  *          description: Server Error
  */
-router.post("/", upload.single('birthCertificate'), authenticateController.post_authenticate);
+router.post("/", upload.single('acte'), authenticateController.post_authenticate);
 
 module.exports = router;
