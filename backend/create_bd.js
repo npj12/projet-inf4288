@@ -43,7 +43,6 @@ client.connect()
                         error: error
                     };
                     console.log(jsonResponse);
-                    return res.status(500).json(jsonResponse);
                 });
             })
             .catch(error=>{ 
@@ -51,5 +50,4 @@ client.connect()
                     error: error
                 };
                 console.log(jsonResponse);
-                return res.status(500).json(jsonResponse);
             });
