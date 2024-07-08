@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const authenticateRouter = require("./api/routes/authenticate");
 const digitizationRouter = require("./api/routes/digitize");
+const searchRouter = require("./api/routes/search");
 
 app.disable('x-powered-by'); 
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(express.static('./uploads'))
 
 app.use("/api/authenticate", authenticateRouter);
 app.use("/api/digitize", digitizationRouter);
+app.use("/api/search", searchRouter);
 swaggerDocs(app);
 
 app.use((req, res, next)=>{
