@@ -1,7 +1,6 @@
 const { PDFDocument, rgb , StandardFonts} = require('pdf-lib');
 const fs = require('fs');
 const {birthCertificateTemplatePath, pathToCreatedBirthCertificate, birth_certificate_coordinates} = require('../constants');
-const { isNumberObject } = require('util/types');
 
 module.exports = async (req, res, next)=>{
     // Charger le PDF existant

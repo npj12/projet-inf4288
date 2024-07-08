@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/digitize/');
     },
     filename: (req, file, cb) =>{
-        cb(null, new Date().toISOString() + '_' + file.originalname.replaceAll(' ', '_'));
+        cb(null, file.originalname.replaceAll(' ', '_'));
     }
 });
 
@@ -82,7 +82,7 @@ router.post("/extract", upload.single('acte'), digitizationController.post_extra
  *                  type: string
  *              arrondissement:
  *                  type: string
- *              numeroAacte:
+ *              numeroActe:
  *                  type: string
  *              nomEnfant:
  *                  type: string 
@@ -124,7 +124,8 @@ router.post("/extract", upload.single('acte'), digitizationController.post_extra
  *                  type: string
  *              assisteDe:
  *                  type: string
-    
+ *              chemin:
+ *                  type: string
  *     responses:
  *      201:
  *        description: Acte de naissance numerisee avec succes

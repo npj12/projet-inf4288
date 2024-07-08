@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { createCanvas, loadImage } = require('canvas');
 const { PDFImage } = require('pdf-image');
-const { createWorker }  = require('tesseract.js');
+const { createWorker, PSM , OEM}  = require('tesseract.js');
 const { correct, correctName }  = require('./test-auto-correct');
 const { birth_certificate_coordinates, baseToBDFiles } = require('../constants');
 
@@ -23,33 +23,44 @@ let extractFromImage = async (imagePath, coordinates) => {
   context.drawImage(image, x, y, width, height, 0, 0, width, height);
 
   // Sauvegarder l'image temporairement pour traitement OCR
-  const outputPath = 'output.png';
+  const outputPath = `${new Date().toISOString()}.${coordinates.name}.png`;
   const buffer = canvas.toBuffer('image/png');
   fs.writeFileSync(outputPath, buffer);
-
   // Utiliser Tesseract.js pour lire l'image
-  const worker = await createWorker(['fra', 'eng']);
-  const { data: { text } } = await worker.recognize(outputPath);
-  await worker.terminate();
+  const worker = await createWorker(['fra'], OEM.DEFAULT, {
+    // tessedit_char_whitelist: `${coordinates.char_whiteList}`,
+    tessedit_pageseg_mode: PSM.SPARSE_TEXT,
+    load_system_dawg: 0,
+    load_freq_dawg: 0,
+    user_words_suffix: 'none',
+    user_patterns_suffix: 'none'
+  });
 
+  let { data: { text } } = await worker.recognize(outputPath);
+  await worker.terminate();
+  
   // On supprime l'image temporaire
     fs.unlinkSync(outputPath);
-    return  text[text.length-1] === '\n' ? text.substring(0, text.length-1) : text;
+    text = text[text.length-1] === '\n' ? text.substring(0, text.length-1) : text;
+    let { callback, pathToList } = coordinates.autoCorect;
+    const corrige = pathToList === undefined || text.length == 0 ? text : await callback(text, pathToList);
+    console.log(coordinates.name, text, corrige);
+    return corrige;
   }
 
 let extract = async (filePath) => {
   // Convertir la première page du PDF en image
   const imagePath = await pdfToImage(filePath);
 
-  const region = await correct(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_region), `${baseToBDFiles}/regions.csv`);
-  const division = await correct(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_departement), `${baseToBDFiles}/departements.csv`);
-  const subdivision = await correct(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_arrondissement), `${baseToBDFiles}/arrondissements.csv`);
+  const region = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_region);
+  const division = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_departement);
+  const subdivision = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_arrondissement);
   const numero_acte = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_numero_acte);
 
-  const name = await correctName(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_nom_enfant), `${baseToBDFiles}/noms.csv`);
+  const name = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_nom_enfant);
   const birthDate = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_date_naissance_enfant);
   const birthPlace = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_lieu_naissance_enfant);
-  const sex = await correct(await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_sex), `${baseToBDFiles}/sex.csv`);
+  const sex = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_sex);
 
   const fatherName = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_nom_pere);
   const fatherBirthPlace = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_lieu_naissance_pere);
@@ -70,14 +81,21 @@ let extract = async (filePath) => {
   const civilStatusRegister = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_etat_civil_centre_de);
   const inThePresenceOf = await extractFromImage(imagePath, birth_certificate_coordinates.coordinates_assiste_de);
   
+  // const textes = await Promise.all([region, division, subdivision, numero_acte, 
+  //                             name, birthDate, birthPlace, sex, 
+  //                             fatherName, fatherBirthPlace, fatherResidence, fatherOccupation,
+  //                             motherName, motherBirthPlace, motherBirthDate, motherResidence, motherOccupation,
+  //                             drawnOn, declarantName1, declarantName2, byUs1, byUs2, civilStatusRegister, inThePresenceOf])
   fs.unlinkSync(imagePath);
 
+  // return textes;
   return {
     region, division, subdivision, numero_acte, 
     name, birthDate, birthPlace, sex, 
     fatherName, fatherBirthPlace, fatherResidence, fatherOccupation,
     motherName, motherBirthPlace, motherBirthDate, motherResidence, motherOccupation, 
-    drawnOn, declarantName1, declarantName2, byUs1, byUs2, civilStatusRegister, inThePresenceOf
+    drawnOn, declarantName1, declarantName2, byUs1, byUs2, civilStatusRegister, inThePresenceOf,
+    chemin:filePath
   };
 }
 
