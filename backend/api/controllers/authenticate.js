@@ -64,7 +64,7 @@ let diff = async (body, acteNumerise)=>{
     let diffence, sommeDifference=0;
     attributes.forEach(attribut => {
         diffence = leven(body[attribut], acteNumerise[attribut.toLowerCase()]);
-        sommeDifference += diffence;
+        sommeDifference += 100-diffence;
         pourcentageDeDifference[attribut] = diffence; 
     });
 
