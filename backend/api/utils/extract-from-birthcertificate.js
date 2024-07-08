@@ -95,7 +95,7 @@ let extract = async (filePath) => {
     fatherName, fatherBirthPlace, fatherResidence, fatherOccupation,
     motherName, motherBirthPlace, motherBirthDate, motherResidence, motherOccupation, 
     drawnOn, declarantName1, declarantName2, byUs1, byUs2, civilStatusRegister, inThePresenceOf,
-    chemin:filePath
+    chemin:filePath.replace('uploads/', '')
   };
 }
 
