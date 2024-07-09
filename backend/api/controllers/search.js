@@ -2,19 +2,24 @@ const { Client } = require('pg');
 const { dbConfig, baseURL } = require("../constants");
 
 exports.get_search = (req, res, next) => {
-    const { region, departement, arrondissement, numeroActe, nom } = req.query;
-    const client = new Client(dbConfig);
+        const validKeys = ['region', 'departement', 'arrondissement', 'numeroActe', 'nomEnfant'];
+        const client = new Client(dbConfig);
         client.connect()
             .then(() => {
-                const values = [region, departement, arrondissement, numeroActe, nom].map(elt => elt==undefined? '':elt);
+                const conditions = [];
+                const values = [];
+
+                validKeys.forEach((key, index) => {
+                    if (req.query[key] !== undefined) {
+                        conditions.push(`${key} ILIKE '%' || $${conditions.length + 1} || '%'`);
+                        values.push(req.query[key]);
+                    }
+                });
+
                 const query = `
                     SELECT *
                     FROM acte_de_naissance
-                    WHERE region ILIKE '%' || $1 || '%'
-                    AND departement ILIKE '%' || $2 || '%'
-                    AND arrondissement ILIKE '%' || $3 || '%'
-                    AND numeroActe ILIKE '%' || $4 || '%'
-                    AND nomEnfant ILIKE '%' || $5 || '%';
+                    ${conditions.length ? 'WHERE ' + conditions.join(' AND ') : ''}
                 `;
             client.query(query, values)
                 .then((resultat)=>{
