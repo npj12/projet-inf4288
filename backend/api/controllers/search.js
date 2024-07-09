@@ -10,7 +10,7 @@ exports.get_search = (req, res, next) => {
                 const values = [];
 
                 validKeys.forEach((key, index) => {
-                    if (req.query[key] !== undefined) {
+                    if (req.query[key] !== undefined && req.query[key].length > 0 ) {
                         conditions.push(`${key} ILIKE '%' || $${conditions.length + 1} || '%'`);
                         values.push(req.query[key]);
                     }
