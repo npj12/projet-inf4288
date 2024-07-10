@@ -27,10 +27,15 @@ const searchController = require('../controllers/search');
 *                type: string
 *                description: L'arrondissement 
 *           - in : query      
-*             name: nom
+*             name: nomEnfant
 *             schema:
 *                type: string
 *                description: Le nom de l'enfant
+*           - in : query      
+*             name: numeroActe
+*             schema:
+*                type: string
+*                description: Le numero de l'acte de naissance
  *     responses:
  *      200:
  *        description: Les resultats de cherche sont bien retournes
