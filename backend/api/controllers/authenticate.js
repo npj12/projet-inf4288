@@ -62,8 +62,10 @@ let diff = async (body, acteNumerise)=>{
 
     let pourcentageDeDifference = {};
     let diffence, sommeDifference=0;
+    let differenceCaractesActeSurBody = 0; // le nombre de caracteres qu'il y'a en plus dans body[attribut] par rapport a acteNumerise[attribut.toLowerCase()]
     attributes.forEach(attribut => {
-        diffence = leven(body[attribut], acteNumerise[attribut.toLowerCase()]);
+        differenceCaractesActeSurBody = body[attribut].length - acteNumerise[attribut.toLowerCase()].length;
+        diffence = leven(body[attribut], acteNumerise[attribut.toLowerCase()]) - (differenceCaractesActeSurBody > 0 ? differenceCaractesActeSurBody : 0);
         sommeDifference += diffence;
         pourcentageDeDifference[attribut] = 100-diffence; 
     });
